@@ -1,0 +1,56 @@
+{
+  "packageId": "ai.myboo.twa",
+  "host": "myboo-ai.netlify.app",
+  "name": "MyBoo.ai",
+  "launcherName": "MyBoo.ai",
+  "display": "standalone",
+  "themeColor": "#4f46e5",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#f9fafb",
+  "enableNotifications": true,
+  "shortcuts": [
+    {
+      "name": "Chat with MyBoo",
+      "shortName": "Chat",
+      "url": "/?tab=chat",
+      "icon": "/shortcuts/chat.png"
+    },
+    {
+      "name": "Daily Check-in",
+      "shortName": "Check-in",
+      "url": "/?tab=checkin",
+      "icon": "/shortcuts/checkin.png"
+    },
+    {
+      "name": "Today's Tasks",
+      "shortName": "Tasks",
+      "url": "/?tab=tasks",
+      "icon": "/shortcuts/tasks.png"
+    }
+  ],
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "skipPwaValidation": false,
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "",
+    "alias": ""
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "permissions": []
+}
