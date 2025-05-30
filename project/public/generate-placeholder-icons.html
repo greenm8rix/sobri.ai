@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Placeholder Icons</title>
+</head>
+<body>
+    <h1>Placeholder Icon Generator for Sobri.ai</h1>
+    <p>Open browser console to see progress. Right-click and save each canvas as the corresponding file.</p>
+    
+    <script>
+        // Function to create a placeholder icon
+        function createIcon(size, filename) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#4f46e5');
+            gradient.addColorStop(1, '#7c3aed');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // White text
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.25}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('S.ai', size / 2, size / 2);
+            
+            // Add to page
+            const div = document.createElement('div');
+            div.style.margin = '10px';
+            div.style.display = 'inline-block';
+            div.innerHTML = `<p>${filename} (${size}x${size})</p>`;
+            div.appendChild(canvas);
+            document.body.appendChild(div);
+            
+            // Convert to blob and create download link
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.textContent = 'Download';
+                a.style.display = 'block';
+                div.appendChild(a);
+            });
+        }
+        
+        // Generate all required icons
+        
+        // Root icons
+        createIcon(192, 'icon-192.png');
+        createIcon(512, 'icon-512.png');
+        createIcon(180, 'apple-icon-180.png');
+        
+        // Android icons
+        createIcon(512, 'android-launchericon-512-512.png');
+        createIcon(192, 'android-launchericon-192-192.png');
+        createIcon(144, 'android-launchericon-144-144.png');
+        createIcon(96, 'android-launchericon-96-96.png');
+        createIcon(72, 'android-launchericon-72-72.png');
+        createIcon(48, 'android-launchericon-48-48.png');
+        
+        // Maskable icon
+        createIcon(512, 'maskable-icon-512.png');
+        
+        // Shortcut icons
+        createIcon(96, 'chat.png');
+        createIcon(96, 'checkin.png');
+        createIcon(96, 'tasks.png');
+        
+        console.log('All placeholder icons generated. Right-click each canvas and save with the specified filename to the appropriate directory.');
+    </script>
+</body>
+</html> 

@@ -1,0 +1,10 @@
+{
+  "name": "Soberi.ai - Recovery Companion",
+  "short_name": "Soberi.ai",
+  "description": "Your AI companion for addiction recovery and mental wellbeing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#4f46e5",
+  "icons": []
+} 
