@@ -14,18 +14,18 @@ import DisclaimerModal from './components/Legal/DisclaimerModal';
 function App() {
   const { activeTab, initializeStore, setActiveTab } = useStore();
   const [showDisclaimerModal, setShowDisclaimerModal] = useState(false);
-  
+
   useEffect(() => {
     // Initialize store with data from localStorage
     initializeStore();
-    
+
     // Set page title based on app name
-    document.title = 'MyBoo.ai - Your Recovery Companion';
-    
+    document.title = 'Soberi.ai - Your Recovery Companion';
+
     // Check for URL parameters to determine initial tab
     const params = new URLSearchParams(window.location.search);
     const tabParam = params.get('tab');
-    
+
     if (tabParam) {
       const validTabs = ['chat', 'checkin', 'journal', 'progress', 'resources', 'tasks'];
       if (validTabs.includes(tabParam)) {
@@ -34,17 +34,17 @@ function App() {
     }
 
     // Check if it's the first visit
-    const hasSeenDisclaimer = localStorage.getItem('myboo_has_seen_disclaimer') === 'true';
+    const hasSeenDisclaimer = localStorage.getItem('Soberi_has_seen_disclaimer') === 'true';
     if (!hasSeenDisclaimer) {
       setShowDisclaimerModal(true);
     }
   }, [initializeStore, setActiveTab]);
-  
+
   const handleCloseDisclaimer = () => {
     setShowDisclaimerModal(false);
-    localStorage.setItem('myboo_has_seen_disclaimer', 'true');
+    localStorage.setItem('Soberi_has_seen_disclaimer', 'true');
   };
-  
+
   const renderActiveView = () => {
     switch (activeTab) {
       case 'chat':

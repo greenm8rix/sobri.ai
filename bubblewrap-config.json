@@ -1,8 +1,8 @@
 {
-  "packageId": "ai.myboo.twa",
-  "host": "myboo-ai.netlify.app",
-  "name": "MyBoo.ai",
-  "launcherName": "MyBoo.ai",
+  "packageId": "ai.Soberi.twa",
+  "host": "Soberi-ai.netlify.app",
+  "name": "Soberi.ai",
+  "launcherName": "Soberi.ai",
   "display": "standalone",
   "themeColor": "#4f46e5",
   "navigationColor": "#000000",
@@ -13,7 +13,7 @@
   "enableNotifications": true,
   "shortcuts": [
     {
-      "name": "Chat with MyBoo",
+      "name": "Chat with Soberi",
       "shortName": "Chat",
       "url": "/?tab=chat",
       "icon": "/shortcuts/chat.png"

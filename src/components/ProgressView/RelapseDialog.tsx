@@ -15,21 +15,21 @@ const RelapseDialog: React.FC<RelapseDialogProps> = ({ isOpen, onClose }) => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    
+
     // Record the relapse
     markRelapse();
-    
+
     // Send a message to the AI about the relapse for support
     if (reason.trim()) {
       await sendMessage(`I had a relapse. ${reason.trim()}`);
     } else {
       await sendMessage("I had a relapse and could use some support.");
     }
-    
+
     setIsSubmitting(false);
     setReason('');
     onClose();
-    
+
     // Navigate to chat for immediate support
     useStore.getState().setActiveTab('chat');
   };
@@ -51,20 +51,20 @@ const RelapseDialog: React.FC<RelapseDialogProps> = ({ isOpen, onClose }) => {
           >
             <div className="flex justify-between items-center border-b p-4">
               <h3 className="text-lg font-semibold">Record a Relapse</h3>
-              <button 
+              <button
                 onClick={onClose}
                 className="p-1 rounded-full hover:bg-gray-100"
               >
                 <X size={20} className="text-gray-500" />
               </button>
             </div>
-            
+
             <div className="p-6">
               <p className="mb-4 text-gray-700">
-                Recording a relapse will reset your current streak, but it's an important part of the recovery process. 
-                MyBoo is here to support you through this moment.
+                Recording a relapse will reset your current streak, but it's an important part of the recovery process.
+                Soberi is here to support you through this moment.
               </p>
-              
+
               <div className="mb-4">
                 <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-1">
                   What happened? (optional)
@@ -78,7 +78,7 @@ const RelapseDialog: React.FC<RelapseDialogProps> = ({ isOpen, onClose }) => {
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                 />
               </div>
-              
+
               <div className="flex space-x-3 justify-end">
                 <button
                   onClick={onClose}

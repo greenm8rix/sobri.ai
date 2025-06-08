@@ -1,6 +1,6 @@
 // Simple mock of uuid function
 export const v4 = (): string => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = Math.random() * 16 | 0;
     const v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
@@ -10,11 +10,11 @@ export const v4 = (): string => {
 // Welcome messages for the AI chat
 export const getWelcomeMessage = (): string => {
   const welcomeMessages = [
-    "Hi, I'm MyBoo, your recovery companion. I'm here to support you on your journey to a healthier life. How are you feeling today?",
-    "Welcome back! I'm MyBoo, your recovery ally. I'm here to listen, support, and help you through both good days and challenging moments. What's on your mind?",
-    "Hello! I'm MyBoo, and I'm dedicated to supporting your recovery journey. Whether you're having a good day or struggling, I'm here for you. How are you doing right now?"
+    "Hi, I'm Soberi, your recovery companion. I'm here to support you on your journey to a healthier life. How are you feeling today?",
+    "Welcome back! I'm Soberi, your recovery ally. I'm here to listen, support, and help you through both good days and challenging moments. What's on your mind?",
+    "Hello! I'm Soberi, and I'm dedicated to supporting your recovery journey. Whether you're having a good day or struggling, I'm here for you. How are you doing right now?"
   ];
-  
+
   return welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
 };
 
@@ -27,7 +27,7 @@ export const getCrisisResponse = (craving: string): string => {
     "Call or text someone you trust right now. Real human connection is powerful during intense cravings.",
     "Step outside for 5 minutes and focus only on nature or your surroundings. A change of environment can interrupt the craving cycle."
   ];
-  
+
   const followUpSupport = [
     "Remember that cravings are temporary - they always pass, even when they feel overwhelming.",
     "Your brain is used to the substance and is sending signals, but you are stronger than these signals. They will weaken over time.",
@@ -35,7 +35,7 @@ export const getCrisisResponse = (craving: string): string => {
     "You've overcome cravings before, and you can do it again. Your past strength is evidence of your capability.",
     "Physical cravings typically peak for 20-30 minutes before subsiding. Can you delay your decision just until this wave passes?"
   ];
-  
+
   // Personalize based on craving intensity
   let responseIntro = "";
   if (craving === "extreme") {
@@ -45,103 +45,103 @@ export const getCrisisResponse = (craving: string): string => {
   } else {
     responseIntro = "I understand you're experiencing cravings right now. ";
   }
-  
+
   // Get random immediate strategy and follow-up support
   const strategy = immediateStrategies[Math.floor(Math.random() * immediateStrategies.length)];
   const support = followUpSupport[Math.floor(Math.random() * followUpSupport.length)];
-  
+
   return `${responseIntro}First, try this: ${strategy}\n\n${support}\n\nAfter you try this, come back and let me know if it helped or if you need another strategy. I'm staying right here with you through this.`;
 };
 
 // Enhanced response system for user messages
 export const getMockResponse = (userMessage: string): string => {
   const lowerMessage = userMessage.toLowerCase();
-  
+
   // Check for crisis/relapse situations first - highest priority
-  if (lowerMessage.includes('relapse') || 
-      lowerMessage.includes('i used') || 
-      lowerMessage.includes('i slipped') || 
-      lowerMessage.includes('i failed')) {
+  if (lowerMessage.includes('relapse') ||
+    lowerMessage.includes('i used') ||
+    lowerMessage.includes('i slipped') ||
+    lowerMessage.includes('i failed')) {
     return "Thank you for your honesty - that takes real courage. Relapse is often part of recovery, not the end of it. What matters most is what you do right now.\n\nFirst, be gentle with yourself. Shame doesn't help recovery, but self-compassion does.\n\nSecond, try to understand what led to this moment. Was there a trigger, emotion, person, or situation that contributed?\n\nYou haven't lost all your progress. Everything you've learned about staying sober is still with you. Would you like to talk about what happened, or would you prefer to focus on your plan for the next 24 hours?";
   }
-  
-  if (lowerMessage.includes('craving') || 
-      lowerMessage.includes('want to use') || 
-      lowerMessage.includes('urge') || 
-      lowerMessage.includes('tempted')) {
+
+  if (lowerMessage.includes('craving') ||
+    lowerMessage.includes('want to use') ||
+    lowerMessage.includes('urge') ||
+    lowerMessage.includes('tempted')) {
     // Determine craving intensity
     let cravingLevel = "moderate";
-    if (lowerMessage.includes('extreme') || 
-        lowerMessage.includes('unbearable') || 
-        lowerMessage.includes('worst') || 
-        lowerMessage.includes('can\'t take')) {
+    if (lowerMessage.includes('extreme') ||
+      lowerMessage.includes('unbearable') ||
+      lowerMessage.includes('worst') ||
+      lowerMessage.includes('can\'t take')) {
       cravingLevel = "extreme";
-    } else if (lowerMessage.includes('severe') || 
-               lowerMessage.includes('strong') || 
-               lowerMessage.includes('really bad')) {
+    } else if (lowerMessage.includes('severe') ||
+      lowerMessage.includes('strong') ||
+      lowerMessage.includes('really bad')) {
       cravingLevel = "severe";
     }
-    
+
     return getCrisisResponse(cravingLevel);
   }
-  
+
   // Check for suicidal ideation or severe mental health crisis
-  if (lowerMessage.includes('kill myself') || 
-      lowerMessage.includes('suicide') || 
-      lowerMessage.includes('end my life') || 
-      lowerMessage.includes('don\'t want to live')) {
+  if (lowerMessage.includes('kill myself') ||
+    lowerMessage.includes('suicide') ||
+    lowerMessage.includes('end my life') ||
+    lowerMessage.includes('don\'t want to live')) {
     return "I'm concerned about what you're sharing, and I want to make sure you get the support you need. If you're having thoughts of harming yourself, please reach out to a crisis helpline where trained professionals can help:\n\n• National Suicide Prevention Lifeline: 988 or 1-800-273-8255\n• Crisis Text Line: Text HOME to 741741\n\nThese services are confidential and available 24/7. Would you like to talk more about what you're feeling? I'm here to listen without judgment.";
   }
-  
+
   // Regular conversation flows
   if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-    return "Hi there! I'm MyBoo, your recovery companion. I'm here to support you through both challenges and victories. How are you feeling today? Remember, I'm here to listen without judgment whenever you need to talk.";
+    return "Hi there! I'm Soberi, your recovery companion. I'm here to support you through both challenges and victories. How are you feeling today? Remember, I'm here to listen without judgment whenever you need to talk.";
   }
-  
+
   if (lowerMessage.includes('purpose') || lowerMessage.includes('meaning') || lowerMessage.includes('what\'s the point')) {
     return "Finding purpose during recovery is one of the most important - and challenging - parts of the journey. When substances are gone, there can be an emptiness that needs to be filled with something meaningful.\n\nMany people in recovery find purpose through:\n\n1. Helping others who are struggling\n2. Reconnecting with passions they had before addiction\n3. Discovering completely new interests\n4. Building deeper connections with loved ones\n5. Creating something (art, writing, projects)\n\nIt's normal to feel a lack of direction at first. Purpose usually emerges gradually as you build a life that aligns with your authentic values. What activities made you feel fulfilled or engaged before your addiction began?";
   }
-  
+
   if (lowerMessage.includes('bad') || lowerMessage.includes('sad') || lowerMessage.includes('depressed') || lowerMessage.includes('awful')) {
     return "I'm sorry to hear you're going through a difficult time. These feelings are a normal part of recovery and life - they don't mean you're failing or doing something wrong.\n\nA critical thing to understand about recovery: it often feels worse before it feels better. When we remove substances, we face emotions we've been numbing, and our brain chemistry needs time to rebalance.\n\nThis difficult period isn't a sign that recovery isn't working - it's actually evidence that you're healing. You're finally processing emotions instead of escaping them.\n\nIs there a specific part of what you're feeling that's most difficult right now?";
   }
-  
+
   if (lowerMessage.includes('feeling worse') || lowerMessage.includes('not getting better') || lowerMessage.includes('why bother')) {
     return "What you're experiencing is actually a normal part of the recovery process. When we stop numbing our emotions with substances, we often feel worse initially as our brain chemistry adjusts and we face feelings we've been avoiding.\n\nThis phenomenon is sometimes called 'the wall' or 'the valley' in recovery - it's a difficult period many people experience where emotional discomfort increases before it gets better.\n\nThe key thing to understand is that this isn't a sign that recovery isn't working - it's actually evidence that you're truly healing. You're doing the hard work of processing emotions rather than escaping them.\n\nMost people who persist through this challenging phase report that eventually, their emotional resilience grows stronger than it was before addiction. Your brain is rewiring itself, and that takes time. Would it be helpful to discuss some strategies for navigating this difficult period?";
   }
-  
+
   if (lowerMessage.includes('good') || lowerMessage.includes('great') || lowerMessage.includes('happy') || lowerMessage.includes('better')) {
     return "That's wonderful to hear! These positive moments are so valuable for your recovery journey. When you're feeling good, it's a perfect time to reinforce your commitment and remember why sobriety matters to you.\n\nCan you identify what contributed to this positive feeling? Understanding what brings you joy and stability can help you intentionally build more of these elements into your daily life. Also, consider capturing this moment in your journal so you can look back on it during more challenging times.";
   }
-  
+
   if (lowerMessage.includes('trigger') || lowerMessage.includes('temptation') || lowerMessage.includes('risk')) {
     return "Identifying your triggers is an important part of recovery. Each time you recognize a trigger, you're building self-awareness that strengthens your ability to stay sober.\n\nFor this specific trigger, let's break it down:\n\n1. Is it a person, place, emotion, or situation?\n2. What early warning signs might tell you this trigger is present?\n3. What's one specific strategy you could use when you encounter it?\n\nHaving a detailed plan for each trigger can transform it from a dangerous threat into a manageable challenge.";
   }
-  
+
   if (lowerMessage.includes('help') || lowerMessage.includes('how can you')) {
     return "I'm here to support your recovery journey in several ways:\n\n• Daily conversation and emotional support without judgment\n• Help tracking your progress and celebrating milestones\n• A space to process difficult emotions and cravings\n• Structure for your day through suggested tasks and activities\n• Reminders of your strengths and reasons for recovery\n• Strategies for handling triggers and challenging situations\n\nWhat would be most helpful for you right now? I'm here to listen, reflect, or provide specific coping strategies if you're facing a particular challenge.";
   }
-  
+
   if (lowerMessage.includes('lonely') || lowerMessage.includes('alone') || lowerMessage.includes('isolated')) {
     return "Recovery can sometimes feel lonely, especially if you've had to distance yourself from people associated with your addiction. This feeling is common but temporary as you build new connections.\n\nHave you considered reaching out to a recovery community? Groups like AA, NA, SMART Recovery, or online forums can provide understanding from people who truly get what you're experiencing. Even one connection with someone who understands can significantly reduce feelings of isolation.\n\nWhat small step could you take today to feel more connected?";
   }
-  
+
   if (lowerMessage.includes('tired') || lowerMessage.includes('exhausted') || lowerMessage.includes('no energy')) {
     return "Recovery takes a lot of energy, especially in the early stages when your body and mind are healing. Feeling tired is completely normal.\n\nA few things that might help:\n\n• Prioritize sleep hygiene - consistent bedtime, dark room, no screens before bed\n• Stay hydrated and eat regular meals with protein\n• Consider gentle movement like walking or stretching\n• Give yourself permission to rest - recovery is hard work\n\nYour energy levels will likely improve as your body heals, but be patient with yourself during this process.";
   }
-  
+
   if (lowerMessage.includes('why quit') || lowerMessage.includes('why stop') || lowerMessage.includes('not worth it')) {
     return "It's completely normal to question your recovery journey sometimes, especially during challenging moments. Your brain might try to convince you that using again would be easier or more enjoyable.\n\nRecovery isn't about feeling good right away - it's about healing so you can eventually feel genuine emotions again, build authentic relationships, and live with integrity. The difficult feelings you're experiencing now are part of that healing process.\n\nRecovery is hard precisely because it's worthwhile. You're rebuilding your neurological pathways, your emotional resilience, and your sense of self. This deep work often feels worse before it feels better.\n\nWhat specific aspect of recovery is feeling most challenging for you right now?";
   }
-  
+
   if (lowerMessage.includes('structure') || lowerMessage.includes('routine') || lowerMessage.includes('bored') || lowerMessage.includes('tasks')) {
     return "Creating structure is crucial in recovery - it fills the time previously spent using or obtaining substances, and builds a foundation for your new life.\n\nI've added some suggested tasks in your Tasks tab based on your recovery stage. These include self-care activities, social connections, and productive tasks that can help rebuild confidence and purpose.\n\nEstablishing a consistent daily routine can significantly reduce cravings by minimizing decision fatigue and providing a sense of accomplishment. What part of your day currently feels most unstructured or challenging?";
   }
-  
+
   if (lowerMessage.includes('no motivation') || lowerMessage.includes('can\'t do anything') || lowerMessage.includes('what\'s the point')) {
     return "Motivation is especially difficult in early recovery because your brain's reward system is recalibrating. What you're experiencing isn't laziness - it's a neurological process as your brain learns to find reward and meaning without substances.\n\nRather than waiting for motivation to appear, try starting with very small actions. Even completing one 5-minute task can build momentum. The structure in your Tasks tab is designed to help with exactly this challenge.\n\nAlso remember that motivation often follows action, not the other way around. Many people find that starting a task, even reluctantly, often leads to natural motivation once they're engaged.\n\nWhat's one tiny step you could take in the next hour that would feel like progress?";
   }
-  
+
   // Default response for other messages - more personalized than the original
   return "Thank you for sharing that with me. Your openness is a strength that supports your recovery. Each time you express your thoughts and feelings, you're building self-awareness and emotional resilience.\n\nRemember that recovery isn't about perfection - it's about progress and how you respond to challenges. What would be most helpful for you to focus on for the rest of today? Is there a specific area where you could use some support or encouragement?";
 };
@@ -152,7 +152,7 @@ export const getMockResponseBasedOnMood = (mood: string, cravingLevel: string = 
   if (cravingLevel === "extreme" || cravingLevel === "severe") {
     return getCrisisResponse(cravingLevel);
   }
-  
+
   const responses = {
     great: [
       "That's wonderful to hear! These positive days are building blocks for your recovery. What's one thing that contributed to your great mood today that you could intentionally incorporate more often?",
@@ -205,39 +205,39 @@ export const getEmotionalInsight = (mood: string, cravingLevel: string, streak: 
     if (mood === 'bad' || mood === 'terrible') {
       return "Early recovery often feels worse before it feels better. Your brain is healing and learning to process emotions without substances. This discomfort is evidence of healing, not failure.";
     }
-    
+
     if (cravingLevel === 'severe' || cravingLevel === 'extreme') {
       return "Strong cravings in early recovery are normal and don't mean you're doing something wrong. Each time you resist, you're building new neural pathways that will eventually make recovery easier.";
     }
-    
+
     return "The early days of recovery are often the hardest. Your brain and body are adjusting to functioning without substances. Be patient with yourself - you're doing something incredibly difficult.";
   }
-  
+
   // Medium-term recovery insights (30-90 days)
   if (streak >= 30 && streak < 90) {
     if (mood === 'good' || mood === 'great') {
       return "You're experiencing what many call the 'pink cloud' - a period of optimism and positive feelings as your body heals. Enjoy these good feelings while preparing for the natural emotional fluctuations that are part of recovery.";
     }
-    
+
     if (cravingLevel === 'mild' || cravingLevel === 'moderate') {
       return "As recovery progresses, cravings often become less frequent but can still be triggered by specific people, places, or emotions. Your growing self-awareness is a powerful recovery tool.";
     }
-    
+
     return "At this stage of recovery, many people begin to face the underlying issues that contributed to their addiction. This deeper emotional work can be challenging but leads to lasting healing.";
   }
-  
+
   // Longer-term recovery insights (90+ days)
   if (streak >= 90) {
     return "Long-term recovery isn't just about not using substances - it's about building a meaningful life where substances aren't needed. Your ongoing commitment to this process is remarkable.";
   }
-  
+
   // General insights that apply to any stage
   const generalInsights = [
     "Recovery isn't about feeling good all the time - it's about feeling everything authentically and developing healthier responses to life's challenges.",
     "The purpose of recovery isn't just abstinence, but building a life where substances aren't needed to cope or find meaning.",
     "Emotions are like waves - they rise, peak, and eventually subside. Learning to ride these waves without substances is a core recovery skill."
   ];
-  
+
   return generalInsights[Math.floor(Math.random() * generalInsights.length)];
 };
 
@@ -506,9 +506,9 @@ export const getRecoveryTask = (category: string, recoveryDays: number): { title
       }
     ]
   };
-  
+
   let taskPool;
-  
+
   if (recoveryDays < 30) {
     // Early recovery - focus on basics and immediate coping
     taskPool = earlyRecoveryTasks[category as keyof typeof earlyRecoveryTasks];
@@ -519,7 +519,7 @@ export const getRecoveryTask = (category: string, recoveryDays: number): { title
     // Advanced recovery - identity development and deeper work
     taskPool = advancedRecoveryTasks[category as keyof typeof advancedRecoveryTasks];
   }
-  
+
   // Select a random task from the appropriate category and recovery stage
   return taskPool[Math.floor(Math.random() * taskPool.length)];
 };

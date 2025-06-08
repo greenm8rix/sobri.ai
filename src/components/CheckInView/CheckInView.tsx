@@ -22,7 +22,7 @@ const CheckInView: React.FC = () => {
   useEffect(() => {
     const today = getCurrentDateString();
     const todayCheckIn = getCheckInByDate(today);
-    
+
     if (todayCheckIn) {
       setSelectedMood(todayCheckIn.mood);
       setSelectedCravingLevel(todayCheckIn.cravingLevel);
@@ -46,13 +46,13 @@ const CheckInView: React.FC = () => {
     if (selectedMood && selectedCravingLevel) {
       // Submit the check-in
       submitCheckIn(selectedMood, selectedCravingLevel, notes);
-      
+
       // Generate appropriate response based on mood and craving level
       const response = getMockResponseBasedOnMood(selectedMood, selectedCravingLevel, useStore.getState().userProgress.currentStreak);
-      
+
       // Send a message from the AI to provide personalized feedback
       await sendMessage(`Based on your check-in (Mood: ${selectedMood}, Cravings: ${selectedCravingLevel}): ${response}`);
-      
+
       // If severe/extreme cravings, direct user to chat for immediate support
       if (selectedCravingLevel === 'extreme' || selectedCravingLevel === 'severe') {
         setSubmissionComplete(true);
@@ -65,17 +65,17 @@ const CheckInView: React.FC = () => {
     }
   };
 
-  const handleTalkToMyBoo = async () => {
+  const handleTalkToSoberi = async () => {
     if (selectedMood && selectedCravingLevel) {
       // Submit the check-in
       submitCheckIn(selectedMood, selectedCravingLevel, notes);
-      
+
       // Generate crisis response for chat
       const message = `I'm having ${selectedCravingLevel} cravings right now and feeling ${selectedMood}.`;
-      
+
       // Switch to chat view
       useStore.getState().setActiveTab('chat');
-      
+
       // Add a small delay to ensure UI has updated
       setTimeout(() => {
         sendMessage(message);
@@ -93,13 +93,13 @@ const CheckInView: React.FC = () => {
 
   if (submissionComplete) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="max-w-lg mx-auto bg-white rounded-xl shadow-sm border border-gray-200 p-6"
       >
         <div className="text-center py-8">
-          <motion.div 
+          <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.2 }}
@@ -110,7 +110,7 @@ const CheckInView: React.FC = () => {
             </svg>
           </motion.div>
           <h3 className="text-xl font-semibold mb-2">Check-In Complete!</h3>
-          
+
           {(selectedCravingLevel === 'extreme' || selectedCravingLevel === 'severe') ? (
             <div>
               <p className="text-gray-600 mb-3">I've noticed you're experiencing strong cravings right now.</p>
@@ -119,8 +119,8 @@ const CheckInView: React.FC = () => {
           ) : (
             <p className="text-gray-600 mb-6">Thank you for checking in today. Your honesty helps build self-awareness, a key skill in recovery.</p>
           )}
-          
-          <button 
+
+          <button
             onClick={resetForm}
             className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors duration-200"
           >
@@ -134,7 +134,7 @@ const CheckInView: React.FC = () => {
   return (
     <div className="max-w-lg mx-auto">
       {alreadyCheckedIn ? (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"
@@ -158,14 +158,14 @@ const CheckInView: React.FC = () => {
           </button>
         </motion.div>
       ) : (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"
         >
           <h2 className="text-xl font-semibold mb-2">Daily Check-In</h2>
           <p className="text-gray-600 text-sm mb-6">Tracking your mood and cravings helps build self-awareness and identifies patterns in your recovery journey.</p>
-          
+
           <div className="space-y-8">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -173,17 +173,17 @@ const CheckInView: React.FC = () => {
               </label>
               <MoodSelector selectedMood={selectedMood} onSelectMood={setSelectedMood} />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Rate your cravings today
               </label>
-              <CravingSelector 
-                selectedCravingLevel={selectedCravingLevel} 
-                onSelectCravingLevel={setSelectedCravingLevel} 
+              <CravingSelector
+                selectedCravingLevel={selectedCravingLevel}
+                onSelectCravingLevel={setSelectedCravingLevel}
               />
             </div>
-            
+
             {/* Emotional Recovery Context */}
             <motion.div
               initial={{ opacity: 0, height: 0 }}
@@ -198,7 +198,7 @@ const CheckInView: React.FC = () => {
                 You're developing the strength to feel difficult emotions without substances. This skill takes time but becomes easier with practice.
               </p>
             </motion.div>
-            
+
             {showCrisisResources && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
@@ -215,7 +215,7 @@ const CheckInView: React.FC = () => {
                 </p>
               </motion.div>
             )}
-            
+
             <div>
               <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
                 Notes (optional)
@@ -229,14 +229,14 @@ const CheckInView: React.FC = () => {
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
             </div>
-            
+
             {showCrisisOptions ? (
               <div className="flex flex-col space-y-3">
                 <button
-                  onClick={handleTalkToMyBoo}
+                  onClick={handleTalkToSoberi}
                   className="w-full py-3 px-4 rounded-lg font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition-colors duration-200"
                 >
-                  Talk to MyBoo Now
+                  Talk to Soberi Now
                 </button>
                 <button
                   onClick={handleSubmit}
@@ -250,8 +250,8 @@ const CheckInView: React.FC = () => {
                 onClick={handleSubmit}
                 disabled={!selectedMood || !selectedCravingLevel}
                 className={`w-full py-3 px-4 rounded-lg font-medium transition-colors duration-200
-                  ${(!selectedMood || !selectedCravingLevel) 
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                  ${(!selectedMood || !selectedCravingLevel)
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
               >
                 Submit Check-In

@@ -1,15 +1,15 @@
 import { DailyCheckIn, JournalEntry, Message, UserProgress, TriggerLog, Task, EmotionalInsight, MemoryEntry, ConversationSummary } from '../types';
 
 const STORAGE_KEYS = {
-  CHECKINS: 'myboo_checkins',
-  JOURNAL: 'myboo_journal',
-  MESSAGES: 'myboo_messages',
-  PROGRESS: 'myboo_progress',
-  TRIGGERS: 'myboo_triggers',
-  TASKS: 'myboo_tasks',
-  INSIGHTS: 'myboo_insights',
-  MEMORY: 'myboo_memory',
-  SUMMARIES: 'myboo_conversation_summaries',
+  CHECKINS: 'Soberi_checkins',
+  JOURNAL: 'Soberi_journal',
+  MESSAGES: 'Soberi_messages',
+  PROGRESS: 'Soberi_progress',
+  TRIGGERS: 'Soberi_triggers',
+  TASKS: 'Soberi_tasks',
+  INSIGHTS: 'Soberi_insights',
+  MEMORY: 'Soberi_memory',
+  SUMMARIES: 'Soberi_conversation_summaries',
 };
 
 // Daily Check-ins
@@ -93,9 +93,9 @@ export const deleteTask = (id: string): void => {
 
 export const completeTask = (id: string): void => {
   const tasks = getTasks();
-  const updatedTasks = tasks.map(task => 
-    task.id === id 
-      ? { ...task, completed: true, completedAt: new Date().toISOString() } 
+  const updatedTasks = tasks.map(task =>
+    task.id === id
+      ? { ...task, completed: true, completedAt: new Date().toISOString() }
       : task
   );
   localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(updatedTasks));
@@ -115,7 +115,7 @@ export const getInsights = (): EmotionalInsight[] => {
 
 export const markInsightAsShown = (id: string): void => {
   const insights = getInsights();
-  const updatedInsights = insights.map(insight => 
+  const updatedInsights = insights.map(insight =>
     insight.id === id ? { ...insight, shown: true } : insight
   );
   localStorage.setItem(STORAGE_KEYS.INSIGHTS, JSON.stringify(updatedInsights));

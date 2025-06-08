@@ -10,7 +10,7 @@ interface BeforeInstallPromptEvent extends Event {
 const AppInstallPrompt: React.FC = () => {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
-  
+
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
@@ -20,20 +20,20 @@ const AppInstallPrompt: React.FC = () => {
       // Show the prompt to the user
       setShowPrompt(true);
     };
-    
+
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    
+
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, []);
-  
+
   const handleInstallClick = () => {
     if (!installPrompt) return;
-    
+
     // Show the install prompt
     installPrompt.prompt();
-    
+
     // Wait for the user to respond to the prompt
     installPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
@@ -41,22 +41,22 @@ const AppInstallPrompt: React.FC = () => {
       } else {
         console.log('User dismissed the install prompt');
       }
-      
+
       // Clear the saved prompt since it can't be used again
       setInstallPrompt(null);
       setShowPrompt(false);
     });
   };
-  
+
   const dismissPrompt = () => {
     setShowPrompt(false);
     // Store in localStorage that the user has dismissed the prompt
     localStorage.setItem('installPromptDismissed', 'true');
   };
-  
+
   // Don't render anything if there's no prompt or the user has dismissed it
   if (!showPrompt) return null;
-  
+
   return (
     <AnimatePresence>
       <motion.div
@@ -67,11 +67,11 @@ const AppInstallPrompt: React.FC = () => {
       >
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            <h3 className="font-medium text-gray-800 mb-1">Install MyBoo.ai</h3>
+            <h3 className="font-medium text-gray-800 mb-1">Install Soberi.ai</h3>
             <p className="text-sm text-gray-600 mb-3">
-              Add MyBoo to your home screen for easier access and a better experience.
+              Add Soberi to your home screen for easier access and a better experience.
             </p>
-            
+
             <div className="flex space-x-2">
               <button
                 onClick={handleInstallClick}
@@ -88,7 +88,7 @@ const AppInstallPrompt: React.FC = () => {
               </button>
             </div>
           </div>
-          <button 
+          <button
             onClick={dismissPrompt}
             className="ml-2 text-gray-400 hover:text-gray-600"
           >

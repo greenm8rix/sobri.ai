@@ -15,7 +15,7 @@ const ChatView: React.FC = () => {
   const [showInfoBanner, setShowInfoBanner] = useState(true);
   const [showEmotionalInsight, setShowEmotionalInsight] = useState(false);
   const [currentInsight, setCurrentInsight] = useState<string | null>(null);
-  
+
   useEffect(() => {
     // Scroll to bottom whenever messages change
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -60,10 +60,10 @@ const ChatView: React.FC = () => {
               className="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center mb-4"
             >
               <motion.div
-                animate={{ 
+                animate={{
                   scale: [1, 1.1, 1],
                 }}
-                transition={{ 
+                transition={{
                   repeat: Infinity,
                   repeatType: "loop",
                   duration: 2,
@@ -72,9 +72,9 @@ const ChatView: React.FC = () => {
                 <Heart size={36} className="text-indigo-500" />
               </motion.div>
             </motion.div>
-            <h3 className="text-xl font-semibold text-gray-800">Welcome to MyBoo.ai</h3>
+            <h3 className="text-xl font-semibold text-gray-800">Welcome to Soberi.ai</h3>
             <p className="text-gray-600 max-w-md">
-              I'm your personal recovery companion. Chat with me anytime about your journey, 
+              I'm your personal recovery companion. Chat with me anytime about your journey,
               challenges, or victories. How are you feeling today?
             </p>
             <motion.div
@@ -85,11 +85,11 @@ const ChatView: React.FC = () => {
             >
               <p className="text-gray-600 text-sm">{getWelcomeMessage()}</p>
             </motion.div>
-            
+
             <div className="w-full max-w-md mt-2">
               <QuickResponses onSelect={handleQuickResponseClick} />
             </div>
-            
+
             {/* Emotional Journey Banner */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -107,7 +107,7 @@ const ChatView: React.FC = () => {
           <>
             <AnimatePresence>
               {showInfoBanner && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
@@ -120,7 +120,7 @@ const ChatView: React.FC = () => {
                       Everything you share is private and confidential. I'm here to support your recovery without judgment.
                     </p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setShowInfoBanner(false)}
                     className="text-blue-500 hover:text-blue-700 ml-2 flex-shrink-0"
                   >
@@ -129,11 +129,11 @@ const ChatView: React.FC = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-            
+
             {/* Emotional Insight Banner */}
             <AnimatePresence>
               {showEmotionalInsight && currentInsight && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
@@ -148,7 +148,7 @@ const ChatView: React.FC = () => {
                       {currentInsight}
                     </p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setShowEmotionalInsight(false)}
                     className="text-amber-500 hover:text-amber-700 ml-2 flex-shrink-0"
                   >
@@ -157,7 +157,7 @@ const ChatView: React.FC = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-            
+
             {messages.map((message) => (
               <MessageBubble
                 key={message.id}
@@ -167,7 +167,7 @@ const ChatView: React.FC = () => {
               />
             ))}
             {isLoading && <ChatSkeleton />}
-            
+
             {!isLoading && messages.length > 0 && (
               <div className="my-4">
                 <QuickResponses onSelect={handleQuickResponseClick} />
@@ -177,7 +177,7 @@ const ChatView: React.FC = () => {
         )}
         <div ref={messagesEndRef} />
       </div>
-      
+
       <div className="border-t bg-white p-4">
         <div className="relative flex items-center">
           <textarea

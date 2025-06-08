@@ -26,14 +26,14 @@ const DisclaimerModal: React.FC<DisclaimerModalProps> = ({ isOpen, onClose }) =>
             <div className="flex justify-between items-center border-b p-4">
               <h3 className="text-lg font-semibold">Before You Begin</h3>
             </div>
-            
+
             <div className="p-4 overflow-y-auto max-h-[calc(80vh-120px)]">
               <p className="text-gray-600 mb-4">
-                MyBoo.ai is a supportive companion for your recovery journey. Please note:
+                Soberi.ai is a supportive companion for your recovery journey. Please note:
               </p>
-              
+
               <LegalDisclaimer type="full" onClose={onClose} />
-              
+
               <div className="mt-4 text-xs text-gray-500">
                 By clicking "I Understand", you confirm that you are at least 18 years old and agree to these terms.
               </div>

@@ -1,22 +1,30 @@
 {
-  "name": "MyBoo.ai - Recovery Companion",
-  "short_name": "MyBoo.ai",
+  "name": "Soberi.ai - Recovery Companion",
+  "short_name": "Soberi.ai",
   "description": "Your AI companion for addiction recovery and mental wellbeing",
   "start_url": "/",
   "id": "/",
   "display": "standalone",
-  "display_override": ["standalone", "fullscreen", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "fullscreen",
+    "minimal-ui"
+  ],
   "orientation": "portrait",
   "background_color": "#f9fafb",
   "theme_color": "#4f46e5",
-  "categories": ["health", "lifestyle", "medical"],
+  "categories": [
+    "health",
+    "lifestyle",
+    "medical"
+  ],
   "screenshots": [
     {
       "src": "/screenshots/chat.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "platform": "android",
-      "label": "Chat with MyBoo"
+      "label": "Chat with Soberi"
     },
     {
       "src": "/screenshots/checkin.png",
@@ -79,32 +87,47 @@
   ],
   "shortcuts": [
     {
-      "name": "Chat with MyBoo",
+      "name": "Chat with Soberi",
       "short_name": "Chat",
-      "description": "Start a conversation with MyBoo",
+      "description": "Start a conversation with Soberi",
       "url": "/?tab=chat",
-      "icons": [{ "src": "/shortcuts/chat.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/shortcuts/chat.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Daily Check-in",
       "short_name": "Check-in",
       "description": "Record your daily mood and cravings",
       "url": "/?tab=checkin",
-      "icons": [{ "src": "/shortcuts/checkin.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/shortcuts/checkin.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Today's Tasks",
       "short_name": "Tasks",
       "description": "View and manage your daily tasks",
       "url": "/?tab=tasks",
-      "icons": [{ "src": "/shortcuts/tasks.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/shortcuts/tasks.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
   "related_applications": [
     {
       "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=ai.myboo.twa",
-      "id": "ai.myboo.twa"
+      "url": "https://play.google.com/store/apps/details?id=ai.Soberi.twa",
+      "id": "ai.Soberi.twa"
     }
   ],
   "prefer_related_applications": true

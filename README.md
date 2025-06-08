@@ -1,10 +1,10 @@
-# MyBoo.ai - Recovery Companion (TWA)
+# Soberi.ai - Recovery Companion (TWA)
 
-MyBoo.ai is a supportive AI companion designed for addiction recovery and mental wellbeing. The application provides users with a non-judgmental space to chat, track their progress, journal their thoughts, and maintain their recovery journey.
+Soberi.ai is a supportive AI companion designed for addiction recovery and mental wellbeing. The application provides users with a non-judgmental space to chat, track their progress, journal their thoughts, and maintain their recovery journey.
 
 ## Features
 
-- **Chat Interface**: Communicate with MyBoo, your supportive AI companion
+- **Chat Interface**: Communicate with Soberi, your supportive AI companion
 - **Daily Check-ins**: Track your mood and cravings
 - **Task Management**: Structured daily activities to support recovery
 - **Journaling**: Record your thoughts and reflections

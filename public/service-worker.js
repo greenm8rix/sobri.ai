@@ -1,5 +1,5 @@
-// Service Worker for MyBoo.ai
-const CACHE_NAME = 'mybooai-cache-v1';
+// Service Worker for Soberi.ai
+const CACHE_NAME = 'Soberiai-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -45,7 +45,7 @@ self.addEventListener('fetch', (event) => {
   if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
-  
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
@@ -53,25 +53,25 @@ self.addEventListener('fetch', (event) => {
         if (response) {
           return response;
         }
-        
+
         // Clone the request
         const fetchRequest = event.request.clone();
-        
+
         return fetch(fetchRequest).then(
           (response) => {
             // Check if valid response
             if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
-            
+
             // Clone the response
             const responseToCache = response.clone();
-            
+
             caches.open(CACHE_NAME)
               .then((cache) => {
                 cache.put(event.request, responseToCache);
               });
-              
+
             return response;
           }
         ).catch(() => {
@@ -79,12 +79,12 @@ self.addEventListener('fetch', (event) => {
           if (event.request.mode === 'navigate') {
             return caches.match('/index.html');
           }
-          
+
           // For image requests, you could return a fallback image
           if (event.request.destination === 'image') {
             return caches.match('/fallback-image.png');
           }
-          
+
           // Otherwise just return nothing
           return new Response('Network error happened', {
             status: 408,
@@ -126,7 +126,7 @@ async function syncTasks() {
 // Push notification event listener
 self.addEventListener('push', (event) => {
   const data = event.data.json();
-  
+
   const options = {
     body: data.body,
     icon: '/android/android-launchericon-192-192.png',
@@ -136,7 +136,7 @@ self.addEventListener('push', (event) => {
       url: data.url || '/'
     }
   };
-  
+
   event.waitUntil(
     self.registration.showNotification(data.title, options)
   );
@@ -145,16 +145,16 @@ self.addEventListener('push', (event) => {
 // Notification click event
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  
+
   event.waitUntil(
-    clients.matchAll({type: 'window'}).then((clientList) => {
+    clients.matchAll({ type: 'window' }).then((clientList) => {
       // Check if there's already a window open
       for (const client of clientList) {
         if (client.url === event.notification.data.url && 'focus' in client) {
           return client.focus();
         }
       }
-      
+
       // If no window is open, open a new one
       if (clients.openWindow) {
         return clients.openWindow(event.notification.data.url);

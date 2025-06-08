@@ -11,11 +11,11 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ toggleMenu, isMenuOpen }) => {
   const { activeTab, userProgress } = useStore();
-  
+
   const getTitle = () => {
     switch (activeTab) {
       case 'chat':
-        return 'Chat with MyBoo';
+        return 'Chat with Soberi';
       case 'checkin':
         return 'Daily Check-In';
       case 'journal':
@@ -27,10 +27,10 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu, isMenuOpen }) => {
       case 'tasks':
         return 'Tasks';
       default:
-        return 'MyBoo.ai';
+        return 'Soberi.ai';
     }
   };
-  
+
   const getSubtitle = () => {
     switch (activeTab) {
       case 'chat':
@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu, isMenuOpen }) => {
     <header className="bg-white border-b px-4 py-3 flex flex-col lg:px-6">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
-          <button 
+          <button
             onClick={toggleMenu}
             className="mr-3 p-2 rounded-full hover:bg-gray-100 lg:hidden"
             aria-label="Open menu"
@@ -62,7 +62,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu, isMenuOpen }) => {
             <Menu size={20} className="text-gray-600" />
           </button>
           <div>
-            <motion.h1 
+            <motion.h1
               className="text-lg font-semibold text-gray-800"
               key={activeTab}
               initial={{ opacity: 0, y: -10 }}
@@ -71,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu, isMenuOpen }) => {
             >
               {getTitle()}
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="text-xs text-gray-500"
               key={`${activeTab}-subtitle`}
               initial={{ opacity: 0 }}
@@ -82,18 +82,18 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu, isMenuOpen }) => {
             </motion.p>
           </div>
         </div>
-        
+
         <div className="flex items-center">
           {activeTab === 'progress' && (
             <div className="hidden sm:block px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-xs font-medium">
-              {userProgress.currentStreak > 0 
-                ? `${userProgress.currentStreak} day streak 🔥` 
+              {userProgress.currentStreak > 0
+                ? `${userProgress.currentStreak} day streak 🔥`
                 : 'Start your journey today'}
             </div>
           )}
         </div>
       </div>
-      
+
       {activeTab === 'chat' && (
         <div className="mt-1 flex justify-center">
           <LegalDisclaimer type="mini" />

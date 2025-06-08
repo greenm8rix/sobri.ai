@@ -8,7 +8,7 @@ import LegalTermsView from '../Legal/LegalTermsView';
 const ResourcesView: React.FC = () => {
   const [activeTab, setActiveTab] = useState('emergency');
   const [legalView, setLegalView] = useState<'terms' | 'privacy' | 'ai' | null>(null);
-  
+
   // Handle legal view links from footer
   useEffect(() => {
     const handleHashChange = () => {
@@ -21,27 +21,27 @@ const ResourcesView: React.FC = () => {
         setLegalView('ai');
       }
     };
-    
+
     handleHashChange(); // Check on initial render
     window.addEventListener('hashchange', handleHashChange);
-    
+
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
-  
+
   if (legalView) {
     return (
-      <LegalTermsView 
-        type={legalView} 
+      <LegalTermsView
+        type={legalView}
         onBack={() => {
           setLegalView(null);
           window.history.pushState("", document.title, window.location.pathname + window.location.search);
-        }} 
+        }}
       />
     );
   }
-  
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
@@ -50,7 +50,7 @@ const ResourcesView: React.FC = () => {
           Access helplines, support groups, and coping strategies to strengthen your recovery journey.
         </p>
       </div>
-      
+
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">
           <TabsTrigger value="emergency">Emergency Help</TabsTrigger>
@@ -58,26 +58,26 @@ const ResourcesView: React.FC = () => {
           <TabsTrigger value="coping">Coping Skills</TabsTrigger>
           <TabsTrigger value="legal">Legal</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="emergency">
           <EmergencyResources />
         </TabsContent>
-        
+
         <TabsContent value="resources">
           <RecoveryResources />
         </TabsContent>
-        
+
         <TabsContent value="coping">
           <CopingSkills />
         </TabsContent>
-        
+
         <TabsContent value="legal">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold mb-4">Legal Information</h2>
             <p className="text-gray-600 mb-6">
               Review our legal documents and policies:
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <button
                 onClick={() => setLegalView('terms')}
@@ -85,10 +85,10 @@ const ResourcesView: React.FC = () => {
               >
                 <h3 className="font-medium text-lg mb-2">Terms of Service</h3>
                 <p className="text-sm text-gray-600">
-                  Review the terms and conditions for using MyBoo.ai
+                  Review the terms and conditions for using Soberi.ai
                 </p>
               </button>
-              
+
               <button
                 onClick={() => setLegalView('privacy')}
                 className="p-5 border border-gray-200 rounded-lg hover:border-indigo-200 transition-colors duration-200"
@@ -98,7 +98,7 @@ const ResourcesView: React.FC = () => {
                   Learn how we collect, use, and protect your data
                 </p>
               </button>
-              
+
               <button
                 onClick={() => setLegalView('ai')}
                 className="p-5 border border-gray-200 rounded-lg hover:border-indigo-200 transition-colors duration-200"
