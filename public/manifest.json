@@ -1,7 +1,7 @@
 {
-  "name": "Soberi.ai - Recovery Companion",
-  "short_name": "Soberi.ai",
-  "description": "Your AI companion for addiction recovery and mental wellbeing",
+  "name": "Soberi.ai",
+  "short_name": "Soberi",
+  "description": "Your supportive AI companion.",
   "start_url": "/",
   "id": "/",
   "display": "standalone",
@@ -14,9 +14,8 @@
   "background_color": "#f9fafb",
   "theme_color": "#4f46e5",
   "categories": [
-    "health",
     "lifestyle",
-    "medical"
+    "utilities"
   ],
   "screenshots": [
     {
@@ -101,7 +100,7 @@
     {
       "name": "Daily Check-in",
       "short_name": "Check-in",
-      "description": "Record your daily mood and cravings",
+      "description": "Record your daily mood and progress",
       "url": "/?tab=checkin",
       "icons": [
         {

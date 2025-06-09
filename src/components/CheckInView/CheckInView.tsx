@@ -2,21 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import MoodSelector from './MoodSelector';
-import CravingSelector from './CravingSelector';
-import { MoodType, CravingLevel } from '../../types';
+import UrgeSelector from './UrgeSelector'; // Renamed CravingSelector
+import { MoodType, UrgeLevel } from '../../types'; // Renamed CravingLevel
 import { getCurrentDateString } from '../../utils/dateUtils';
 import { getCheckInByDate } from '../../utils/storageUtils';
-import { getMockResponseBasedOnMood } from '../../utils/mockUtils';
-import EmergencyResources from '../Resources/EmergencyResources';
+// import { getMockResponseBasedOnMood } from '../../utils/mockUtils'; // Removed as per user feedback
+// import EmergencyResources from '../Resources/EmergencyResources'; // Removed as per user feedback
+import { useAuth } from '../../auth/AuthContext';
 
 const CheckInView: React.FC = () => {
+  const { user } = useAuth();
   const { submitCheckIn, sendMessage } = useStore();
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
-  const [selectedCravingLevel, setSelectedCravingLevel] = useState<CravingLevel | null>(null);
+  const [selectedUrgeLevel, setSelectedUrgeLevel] = useState<UrgeLevel | null>(null); // Renamed selectedCravingLevel
   const [notes, setNotes] = useState('');
   const [alreadyCheckedIn, setAlreadyCheckedIn] = useState(false);
   const [submissionComplete, setSubmissionComplete] = useState(false);
-  const [showCrisisResources, setShowCrisisResources] = useState(false);
+  // const [showCrisisResources, setShowCrisisResources] = useState(false); // Removed as per user feedback
   const [showCrisisOptions, setShowCrisisOptions] = useState(false);
 
   useEffect(() => {
@@ -25,36 +27,29 @@ const CheckInView: React.FC = () => {
 
     if (todayCheckIn) {
       setSelectedMood(todayCheckIn.mood);
-      setSelectedCravingLevel(todayCheckIn.cravingLevel);
+      setSelectedUrgeLevel(todayCheckIn.urgeLevel); // Renamed selectedCravingLevel and todayCheckIn.cravingLevel
       setNotes(todayCheckIn.notes);
       setAlreadyCheckedIn(true);
     }
   }, []);
 
-  // Show crisis resources when extreme cravings are selected
+  // Show crisis options when extreme urges are selected
   useEffect(() => {
-    if (selectedCravingLevel === 'extreme' || selectedCravingLevel === 'severe') {
-      setShowCrisisResources(true);
+    if (selectedUrgeLevel === 'extreme' || selectedUrgeLevel === 'severe') { // Renamed selectedCravingLevel
+      // setShowCrisisResources(true); // Removed as per user feedback
       setShowCrisisOptions(true);
     } else {
-      setShowCrisisResources(false);
+      // setShowCrisisResources(false); // Removed as per user feedback
       setShowCrisisOptions(false);
     }
-  }, [selectedCravingLevel]);
+  }, [selectedUrgeLevel]); // Renamed selectedCravingLevel
 
   const handleSubmit = async () => {
-    if (selectedMood && selectedCravingLevel) {
+    if (selectedMood && selectedUrgeLevel) { // Renamed selectedCravingLevel
       // Submit the check-in
-      submitCheckIn(selectedMood, selectedCravingLevel, notes);
-
-      // Generate appropriate response based on mood and craving level
-      const response = getMockResponseBasedOnMood(selectedMood, selectedCravingLevel, useStore.getState().userProgress.currentStreak);
-
-      // Send a message from the AI to provide personalized feedback
-      await sendMessage(`Based on your check-in (Mood: ${selectedMood}, Cravings: ${selectedCravingLevel}): ${response}`);
-
-      // If severe/extreme cravings, direct user to chat for immediate support
-      if (selectedCravingLevel === 'extreme' || selectedCravingLevel === 'severe') {
+      submitCheckIn(selectedMood, selectedUrgeLevel, notes); // Renamed selectedCravingLevel
+      // If severe/extreme urges, direct user to chat for guidance
+      if (selectedUrgeLevel === 'extreme' || selectedUrgeLevel === 'severe') { // Renamed selectedCravingLevel
         setSubmissionComplete(true);
         setTimeout(() => {
           useStore.getState().setActiveTab('chat');
@@ -65,27 +60,40 @@ const CheckInView: React.FC = () => {
     }
   };
 
-  const handleTalkToSoberi = async () => {
-    if (selectedMood && selectedCravingLevel) {
-      // Submit the check-in
-      submitCheckIn(selectedMood, selectedCravingLevel, notes);
+  const handleTalkToCompanion = async () => {
+    if (selectedMood && selectedUrgeLevel) { // Renamed selectedCravingLevel
+      // Submit the check-in first (it uses its own internal ID system)
+      submitCheckIn(selectedMood, selectedUrgeLevel, notes); // Renamed selectedCravingLevel
 
-      // Generate crisis response for chat
-      const message = `I'm having ${selectedCravingLevel} cravings right now and feeling ${selectedMood}.`;
+      // Generate message for chat
+      const message = `I'm experiencing ${selectedUrgeLevel} urges right now and feeling ${selectedMood}.`; // Updated message
 
       // Switch to chat view
       useStore.getState().setActiveTab('chat');
 
-      // Add a small delay to ensure UI has updated
+      if (!user || !user.id) {
+        console.error("User or user.id is not available for sending message to Companion App.");
+        const tempIdForLocal = useStore.getState().messages.length > 0 ? useStore.getState().messages[0].id : 'temp-error-id';
+        const localErrorMsg = {
+          id: tempIdForLocal + 'error',
+          content: 'You need to be logged in to talk to Companion App. Please log in and try again.',
+          sender: 'ai' as 'ai' | 'user',
+          timestamp: Date.now(),
+        };
+        useStore.setState(state => ({ messages: [...state.messages, localErrorMsg] }));
+        return;
+      }
+
+      // Add a small delay to ensure UI has updated after setActiveTab
       setTimeout(() => {
-        sendMessage(message);
+        sendMessage(message, user.id);
       }, 100);
     }
   };
 
   const resetForm = () => {
     setSelectedMood(null);
-    setSelectedCravingLevel(null);
+    setSelectedUrgeLevel(null); // Renamed selectedCravingLevel
     setNotes('');
     setSubmissionComplete(false);
     setAlreadyCheckedIn(false);
@@ -111,13 +119,13 @@ const CheckInView: React.FC = () => {
           </motion.div>
           <h3 className="text-xl font-semibold mb-2">Check-In Complete!</h3>
 
-          {(selectedCravingLevel === 'extreme' || selectedCravingLevel === 'severe') ? (
+          {(selectedUrgeLevel === 'extreme' || selectedUrgeLevel === 'severe') ? ( // Renamed selectedCravingLevel
             <div>
-              <p className="text-gray-600 mb-3">I've noticed you're experiencing strong cravings right now.</p>
-              <p className="text-gray-600 mb-6">Taking you to the chat for immediate support...</p>
+              <p className="text-gray-600 mb-3">I've noticed you're experiencing strong urges right now.</p> {/* cravings to urges */}
+              <p className="text-gray-600 mb-6">Taking you to the chat for guidance...</p>
             </div>
           ) : (
-            <p className="text-gray-600 mb-6">Thank you for checking in today. Your honesty helps build self-awareness, a key skill in recovery.</p>
+            <p className="text-gray-600 mb-6">Thank you for checking in today. Your honesty helps build self-awareness, a key skill on your journey.</p>
           )}
 
           <button
@@ -164,7 +172,7 @@ const CheckInView: React.FC = () => {
           className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"
         >
           <h2 className="text-xl font-semibold mb-2">Daily Check-In</h2>
-          <p className="text-gray-600 text-sm mb-6">Tracking your mood and cravings helps build self-awareness and identifies patterns in your recovery journey.</p>
+          <p className="text-gray-600 text-sm mb-6">Tracking your mood and urges helps build self-awareness and identifies patterns on your journey.</p> {/* cravings to urges */}
 
           <div className="space-y-8">
             <div>
@@ -176,45 +184,15 @@ const CheckInView: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
-                Rate your cravings today
+                Rate your urges/strong desires today {/* cravings to urges/strong desires */}
               </label>
-              <CravingSelector
-                selectedCravingLevel={selectedCravingLevel}
-                onSelectCravingLevel={setSelectedCravingLevel}
+              <UrgeSelector // Renamed CravingSelector
+                selectedUrgeLevel={selectedUrgeLevel} // Renamed selectedCravingLevel
+                onSelectUrgeLevel={setSelectedUrgeLevel} // Renamed onSelectCravingLevel
               />
             </div>
 
-            {/* Emotional Recovery Context */}
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="bg-indigo-50 border border-indigo-100 rounded-lg p-4"
-            >
-              <h3 className="text-indigo-900 font-medium mb-2">Recovery Context</h3>
-              <p className="text-indigo-700 text-sm mb-3">
-                Recovery often feels worse before it gets better as your brain heals and you learn to process emotions. This discomfort isn't failure—it's evidence of healing.
-              </p>
-              <p className="text-indigo-700 text-sm">
-                You're developing the strength to feel difficult emotions without substances. This skill takes time but becomes easier with practice.
-              </p>
-            </motion.div>
-
-            {showCrisisResources && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                className="bg-orange-50 border border-orange-200 rounded-lg p-4"
-              >
-                <h3 className="text-orange-800 font-medium mb-2">Need immediate help?</h3>
-                <p className="text-orange-700 text-sm mb-3">
-                  Strong cravings are temporary and will pass. You're not alone in this moment.
-                </p>
-                <EmergencyResources compact={true} />
-                <p className="text-orange-700 text-sm mt-3">
-                  After submitting your check-in, we'll provide personalized strategies and connect you with immediate support.
-                </p>
-              </motion.div>
-            )}
+            {/* Removed CrisisResources section */}
 
             <div>
               <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
@@ -225,7 +203,7 @@ const CheckInView: React.FC = () => {
                 rows={3}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="What's affecting your mood or cravings today? Any triggers or victories to note?"
+                placeholder="What's affecting your mood or urges today? Any notable events or feelings?" /* cravings to urges */
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
             </div>
@@ -233,10 +211,10 @@ const CheckInView: React.FC = () => {
             {showCrisisOptions ? (
               <div className="flex flex-col space-y-3">
                 <button
-                  onClick={handleTalkToSoberi}
+                  onClick={handleTalkToCompanion}
                   className="w-full py-3 px-4 rounded-lg font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition-colors duration-200"
                 >
-                  Talk to Soberi Now
+                  Talk to Companion Now
                 </button>
                 <button
                   onClick={handleSubmit}
@@ -248,9 +226,9 @@ const CheckInView: React.FC = () => {
             ) : (
               <button
                 onClick={handleSubmit}
-                disabled={!selectedMood || !selectedCravingLevel}
+                disabled={!selectedMood || !selectedUrgeLevel} // Renamed selectedCravingLevel
                 className={`w-full py-3 px-4 rounded-lg font-medium transition-colors duration-200
-                  ${(!selectedMood || !selectedCravingLevel)
+                  ${(!selectedMood || !selectedUrgeLevel) // Renamed selectedCravingLevel
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
               >

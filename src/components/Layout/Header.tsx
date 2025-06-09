@@ -3,6 +3,8 @@ import { Menu } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import LegalDisclaimer from '../Legal/LegalDisclaimer';
+import LoginButton from '../../auth/LoginButton';
+import { StorageIndicator } from '../UI/StorageIndicator';
 
 interface HeaderProps {
   toggleMenu: () => void;
@@ -15,38 +17,42 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu, isMenuOpen }) => {
   const getTitle = () => {
     switch (activeTab) {
       case 'chat':
-        return 'Chat with Soberi';
+        return 'Chat with Soberi'; // Changed
       case 'checkin':
-        return 'Daily Check-In';
+        return 'Daily Check-in';
       case 'journal':
-        return 'Journal';
+        return 'My Journal';
       case 'progress':
-        return 'Your Progress';
+        return 'My Progress';
       case 'resources':
-        return 'Resources';
+        return 'Helpful Resources';
       case 'tasks':
-        return 'Tasks';
+        return 'Daily Tasks';
+      case 'insights':
+        return 'Reflect on your insights';
       default:
-        return 'Soberi.ai';
+        return 'Soberi.ai'; // Changed
     }
   };
 
   const getSubtitle = () => {
     switch (activeTab) {
       case 'chat':
-        return 'Share your thoughts and feelings';
+        return 'Your private AI companion';
       case 'checkin':
         return 'Track your daily status';
       case 'journal':
         return 'Reflect and record your journey';
       case 'progress':
-        return `${userProgress.currentStreak} day${userProgress.currentStreak !== 1 ? 's' : ''} clean`;
+        return `${userProgress.currentStreak} day${userProgress.currentStreak !== 1 ? 's' : ''} streak`;
       case 'resources':
-        return 'Support and tools';
+        return 'Information and tools';
       case 'tasks':
         return 'Structure your day';
+      case 'insights':
+        return 'Reflect on your insights';
       default:
-        return 'Your recovery companion';
+        return 'Your supportive companion';
     }
   };
 
@@ -91,11 +97,17 @@ const Header: React.FC<HeaderProps> = ({ toggleMenu, isMenuOpen }) => {
                 : 'Start your journey today'}
             </div>
           )}
+          <div className="ml-2">
+            <StorageIndicator />
+          </div>
+          <div className="ml-2">
+            <LoginButton />
+          </div>
         </div>
       </div>
 
       {activeTab === 'chat' && (
-        <div className="mt-1 flex justify-center">
+        <div className="mt-1 flex justify-end z-50">
           <LegalDisclaimer type="mini" />
         </div>
       )}

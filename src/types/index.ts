@@ -1,13 +1,14 @@
 export type MoodType = 'great' | 'good' | 'neutral' | 'bad' | 'terrible';
-export type CravingLevel = 'none' | 'mild' | 'moderate' | 'severe' | 'extreme';
+export type UrgeLevel = 'none' | 'mild' | 'moderate' | 'severe' | 'extreme'; // Renamed CravingLevel
 export type TaskPriority = 'high' | 'medium' | 'low';
-export type TaskCategory = 'self-care' | 'physical' | 'social' | 'productive' | 'recovery';
+// Removed 'recovery' from TaskCategory
+export type TaskCategory = 'self-care' | 'physical' | 'social' | 'productive';
 
 export interface DailyCheckIn {
   id: string;
   date: string;
   mood: MoodType;
-  cravingLevel: CravingLevel;
+  urgeLevel: UrgeLevel; // Renamed cravingLevel
   notes: string;
 }
 
@@ -28,7 +29,7 @@ export interface Message {
 export interface Milestone {
   id: string;
   date: string;
-  type: 'streak' | 'relapse' | 'achievement';
+  type: 'streak' | 'setback' | 'achievement'; // Changed 'relapse' to 'setback'
   value: number;
   description: string;
 }
@@ -60,8 +61,8 @@ export interface UserProgress {
   longestStreak: number;
   startDate: string | null;
   lastCheckInDate: string | null;
-  totalDaysClean: number;
-  relapseCount: number;
+  totalDaysClean: number; // Represents general progress days
+  setbackCount: number;
   milestones?: Milestone[];
 }
 
@@ -72,6 +73,7 @@ export interface EmotionalInsight {
   type: 'insight' | 'encouragement' | 'reminder';
   source: 'system' | 'ai' | 'user';
   shown: boolean;
+  userNote?: string; // Optional user note/reflection
 }
 
 // Memory system types
@@ -84,16 +86,17 @@ export interface MemoryEntry {
   tags: string[];
   lastAccessed?: number;
   accessCount: number;
+  embedding?: number[]; // Optional: vector embedding for semantic search
 }
 
-export type MemoryType = 
+export type MemoryType =
   | 'personal_detail' // Personal information shared by the user
   | 'preference' // User preferences and likes/dislikes
   | 'breakthrough' // Important realizations or progress
   | 'trigger' // Identified triggers
   | 'coping_strategy' // Strategies that work for the user
   | 'goal' // User goals
-  | 'relapse' // Information about relapses
+  | 'setback' // Information about setbacks (renamed from 'relapse')
   | 'conversation_summary'; // Summaries of important conversations
 
 export interface ConversationSummary {
@@ -104,4 +107,5 @@ export interface ConversationSummary {
   topics: string[];
   emotionalState: string;
   keyInsights: string[];
+  summaryType?: 'client_generated' | 'ai_generated'; // To distinguish summary origins
 }

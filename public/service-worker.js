@@ -3,13 +3,13 @@ const CACHE_NAME = 'Soberiai-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/android/android-launchericon-192-192.png',
-  '/android/android-launchericon-512-512.png'
+  '/manifest.json'
+  // Removed non-existent icon files
 ];
 
 // Install event - cache assets
 self.addEventListener('install', (event) => {
+  console.log('SW: install event - new version detected.');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -22,6 +22,7 @@ self.addEventListener('install', (event) => {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
+  console.log('SW: activate event - new version activated.');
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -37,6 +38,15 @@ self.addEventListener('activate', (event) => {
       return self.clients.claim();
     })
   );
+});
+
+// Listener for messages from the client (e.g., to manually trigger skipWaiting)
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('SW: SKIP_WAITING message received, calling skipWaiting().');
+    self.skipWaiting();
+  }
+  // Handle other messages if needed
 });
 
 // Fetch event - serve from cache, then network

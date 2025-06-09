@@ -8,11 +8,20 @@ export type EventType =
   | 'check_in_completed'
   | 'journal_entry_created'
   | 'relapse_recorded'
-  | 'streak_milestone';
+  | 'streak_milestone'
+  | 'trigger_log_created' // Added
+  | 'task_created'        // Added
+  | 'task_completed';     // Added
 
 // Event properties
 export interface EventProperties {
   [key: string]: string | number | boolean | null | undefined;
+}
+
+interface StoredEventData extends EventProperties {
+  event: EventType;
+  timestamp: string;
+  sessionId: string;
 }
 
 class AnalyticsService {
@@ -81,9 +90,9 @@ class AnalyticsService {
   }
 
   // Store event in local storage for debugging
-  private storeEvent(eventData: any): void {
+  private storeEvent(eventData: StoredEventData): void {
     try {
-      const events = JSON.parse(localStorage.getItem('Soberi_analytics_events') || '[]');
+      const events: StoredEventData[] = JSON.parse(localStorage.getItem('Soberi_analytics_events') || '[]');
       events.push(eventData);
 
       // Keep only last 100 events to avoid storage issues

@@ -1,0 +1,12 @@
+node_modules
+dist
+npm-debug.log
+Dockerfile
+.dockerignore
+.git
+.gitignore
+README.md
+
+# Ignore build artifacts if they are committed by mistake
+# /dist is usually where Vite puts build output, which is handled by the multi-stage build.
+# /build or other similar directories if your project uses them.

@@ -32,14 +32,14 @@ const LegalTermsView: React.FC<LegalTermsViewProps> = ({ type, onBack }) => {
               These Terms of Service ("Terms") govern your access to and use of Soberi.ai, including any content, functionality, and services offered through Soberi.ai (the "Service").
             </p>
 
-            <h2>2. Medical Disclaimer</h2>
+            <h2>2. Important Note on Guidance</h2>
             <p>
-              Soberi.ai is an informational and self-help tool only. The content and conversations provided by the service do not constitute medical advice, diagnosis, or treatment and do not create a clinician–patient relationship. Always seek the advice of a qualified health-care professional with any questions you may have regarding a medical condition or mental-health concern.
+              Soberi.ai is an informational and self-help tool designed for personal growth and general well-being. The content and conversations provided by the service do not constitute professional advice (such as medical, legal, or financial advice) and do not create a professional-client relationship. Always seek the advice of a qualified professional with any questions you may have regarding specific personal concerns or well-being.
             </p>
 
-            <h2>3. Emergency Disclaimer</h2>
+            <h2>3. Emergency Situations</h2>
             <p>
-              If you believe you may harm yourself or others, or are having a medical emergency, call your local emergency number (e.g., 112 in the EU/UK, 911 in the US) immediately. Soberi.ai is not a crisis-response service and cannot contact emergency services on your behalf.
+              If you believe you may harm yourself or others, or are having an emergency, call your local emergency number (e.g., 112 in the EU/UK, 911 in the US) immediately. Soberi.ai is not a crisis-response service and cannot contact emergency services on your behalf.
             </p>
 
             <h2>4. AI & Accuracy Disclaimer</h2>
@@ -81,17 +81,14 @@ const LegalTermsView: React.FC<LegalTermsViewProps> = ({ type, onBack }) => {
               This Privacy Policy describes how we collect, use, and share your personal information when you use Soberi.ai (the "Service").
             </p>
 
-            <h2>2. Information We Collect</h2>
+            <h2>2. Information We Collect and How It's Handled</h2>
             <p>
-              We collect information you provide directly to us, including:
+              Soberi.ai is designed to be a private, client-sided application for most of your personal data.
             </p>
             <ul>
-              <li>Chat messages and interactions with the AI</li>
-              <li>Journal entries</li>
-              <li>Check-in data regarding your mood and cravings</li>
-              <li>Progress tracking information</li>
-              <li>Task information</li>
-              <li>Device information and usage data</li>
+              <li><strong>Locally Stored Interaction Data:</strong> All personal interaction data you generate within the app – including your chat messages, journal entries, daily check-ins (mood, cravings, notes), progress details, and task information – is stored exclusively on your local device and is encrypted. <strong>We do not collect, transmit, or store this personal interaction data on our servers.</strong></li>
+              <li><strong>Account Information (Server-Stored):</strong> If you choose to create an account for features like subscription management, we collect your email address for authentication. This, along with your subscription status (managed via Stripe), is the only personal data stored on our secure servers (managed via Supabase).</li>
+              <li><strong>Anonymized Usage Data (Optional & Aggregated):</strong> To help us improve Soberi.ai, we may collect anonymized and aggregated usage statistics (e.g., which features are most used). This data does not contain any of your personal interaction content and cannot be used to identify you.</li>
             </ul>
 
             <h2>3. How We Use Your Information</h2>
@@ -99,16 +96,22 @@ const LegalTermsView: React.FC<LegalTermsViewProps> = ({ type, onBack }) => {
               We use your information to:
             </p>
             <ul>
-              <li>Provide, maintain, and improve the Service</li>
-              <li>Personalize your experience</li>
-              <li>Monitor and analyze usage trends</li>
-              <li>Enhance the safety and security of the Service</li>
-              <li>Communicate with you about the Service</li>
+              <li>Provide, maintain, and improve the Service.</li>
+              <li>Manage your account and subscription (if applicable).</li>
+              <li>Personalize your experience (primarily through local data processing).</li>
+              <li>Monitor and analyze usage trends to enhance app functionality (using anonymized data).</li>
+              <li>Communicate with you about your account or important updates to the Service.</li>
             </ul>
 
             <h2>4. Data Storage and Security</h2>
             <p>
-              Your data is stored locally on your device and synchronized with secure cloud storage when you are online. We implement appropriate technical and organizational measures to protect your personal data.
+              <strong>Your personal interaction data (chats, journals, check-ins, tasks, progress details) is stored exclusively on your local device. This data is encrypted on your device, and Soberi.ai (the company) does not have access to it.</strong>
+            </p>
+            <p>
+              The only personal information stored on our servers is your email address (for account authentication via Supabase) and your subscription status (managed by our payment processor, Stripe). We implement industry-standard security measures to protect this limited server-stored data.
+            </p>
+            <p>
+              The security of your locally stored data also depends on the security of your own device. Please take appropriate measures to secure your device.
             </p>
 
             <h2>5. GDPR Compliance</h2>
@@ -119,7 +122,7 @@ const LegalTermsView: React.FC<LegalTermsViewProps> = ({ type, onBack }) => {
               Lawful basis for processing:
             </p>
             <ul>
-              <li>Consent: For processing health-related data</li>
+              <li>Consent: For processing sensitive personal data (if applicable and with your explicit consent)</li>
               <li>Contract: To provide you with the Service</li>
               <li>Legitimate Interests: To improve our Service</li>
             </ul>
@@ -143,7 +146,7 @@ const LegalTermsView: React.FC<LegalTermsViewProps> = ({ type, onBack }) => {
 
             <h2>8. Contact Us</h2>
             <p>
-              If you have any questions about this Privacy Policy, please contact us at: privacy@Soberi.ai
+              If you have any questions about this Privacy Policy, please contact us at: privacy@soberi.ai
             </p>
           </>
         )}
@@ -152,12 +155,12 @@ const LegalTermsView: React.FC<LegalTermsViewProps> = ({ type, onBack }) => {
           <>
             <h2>1. AI Technology</h2>
             <p>
-              Soberi.ai uses advanced artificial intelligence technology to provide recovery support through conversations. Our AI system is designed to offer encouragement, information, and coping strategies for addiction recovery.
+              Soberi.ai uses advanced artificial intelligence technology to provide helpful conversations. Our AI system is designed to offer encouragement and information.
             </p>
 
             <h2>2. How Our AI Works</h2>
             <p>
-              Our AI uses natural language processing to understand your messages and generate helpful responses. The system is trained on a wide range of recovery-related information but does not provide medical advice or treatment.
+              Our AI uses natural language processing to understand your messages and generate helpful responses. The system is trained on a wide range of information but does not provide professional advice or treatment.
             </p>
 
             <h2>3. AI Limitations</h2>
@@ -166,24 +169,14 @@ const LegalTermsView: React.FC<LegalTermsViewProps> = ({ type, onBack }) => {
             </p>
             <ul>
               <li>It may occasionally generate incorrect or incomplete information</li>
-              <li>It cannot diagnose medical conditions or provide personalized medical advice</li>
+              <li>It cannot diagnose conditions or provide personalized professional advice</li>
               <li>It cannot contact emergency services if you are in crisis</li>
               <li>It may not always understand complex emotional states or nuanced situations</li>
             </ul>
 
-            <h2>4. Data Usage for AI Improvement</h2>
+            <h2>4. EU AI Act Compliance</h2>
             <p>
-              With your permission, we may use anonymized conversations to improve our AI system. All personal identifiers are removed before any data is used for training or improvement purposes.
-            </p>
-
-            <h2>5. Human Oversight</h2>
-            <p>
-              Our system includes human oversight processes to review and improve AI responses, especially for sensitive topics. Any human review of conversations is conducted with strict privacy protocols.
-            </p>
-
-            <h2>6. EU AI Act Compliance</h2>
-            <p>
-              Soberi.ai is designed to comply with the EU AI Act requirements for high-risk AI systems, including risk assessment, bias monitoring, and technical documentation.
+              Soberi.ai is designed to comply with the EU AI Act requirements for AI systems, including risk assessment, bias monitoring, and technical documentation where applicable.
             </p>
           </>
         )}

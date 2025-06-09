@@ -2,7 +2,7 @@ import React from 'react';
 import { AlertTriangle, Info, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export type DisclaimerType = 'medical' | 'emergency' | 'ai' | 'mini' | 'full';
+export type DisclaimerType = 'general_guidance' | 'emergency' | 'ai' | 'mini' | 'full'; // Renamed 'medical' to 'general_guidance'
 
 interface LegalDisclaimerProps {
   type: DisclaimerType;
@@ -18,25 +18,22 @@ const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
   // Mini disclaimer for persistent display in UI header
   if (type === 'mini') {
     return (
-      <div className={`text-xs text-gray-500 flex items-center ${className}`}>
-        <span className="mr-1">🤖</span>
-        <span>AI companion · not medical advice</span>
-        <span className="mx-1">·</span>
-        <span className="text-red-600">Emergencies: 911</span>
+      <div className={`text-xs text-gray-500 ${className}`}>
+        <span>AI companion · not professional advice</span>
       </div>
     );
   }
 
-  // Medical disclaimer
-  if (type === 'medical') {
+  // General Guidance Disclaimer (formerly Medical)
+  if (type === 'general_guidance') {
     return (
       <div className={`bg-blue-50 border border-blue-100 rounded-lg p-4 ${className}`}>
         <div className="flex">
           <Info size={20} className="text-blue-500 flex-shrink-0 mt-0.5 mr-3" />
           <div className="flex-1">
-            <h4 className="text-sm font-medium text-blue-800">Medical Disclaimer</h4>
+            <h4 className="text-sm font-medium text-blue-800">Important Note on Guidance</h4>
             <p className="text-xs text-blue-700 mt-1">
-              Soberi.ai is an informational and self-help tool only. The content and conversations provided by the service do not constitute medical advice, diagnosis, or treatment and do not create a clinician–patient relationship. Always seek the advice of a qualified health-care professional with any questions you may have regarding a medical condition or mental-health concern.
+              Soberi.ai is an informational and self-help tool designed for personal growth and general well-being. The content and conversations provided by the service do not constitute professional advice (such as medical, legal, or financial advice) and do not create a professional-client relationship. Always seek the advice of a qualified professional with any questions you may have regarding specific personal concerns.
             </p>
           </div>
           {onClose && (
@@ -60,9 +57,9 @@ const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
         <div className="flex">
           <AlertTriangle size={20} className="text-red-500 flex-shrink-0 mt-0.5 mr-3" />
           <div className="flex-1">
-            <h4 className="text-sm font-medium text-red-800">Emergency Disclaimer</h4>
+            <h4 className="text-sm font-medium text-red-800">Emergency Situations</h4>
             <p className="text-xs text-red-700 mt-1">
-              If you believe you may harm yourself or others, or are having a medical emergency, call your local emergency number (e.g., 112 in the EU/UK, 911 in the US) immediately. Soberi.ai is not a crisis-response service and cannot contact emergency services on your behalf.
+              If you believe you may harm yourself or others, or are having an emergency, call your local emergency number (e.g., 112 in the EU/UK, 911 in the US) immediately. Soberi.ai is not a crisis-response service and cannot contact emergency services on your behalf.
             </p>
           </div>
           {onClose && (
@@ -109,16 +106,16 @@ const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
   return (
     <div className={`space-y-4 ${className}`}>
       <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-blue-800">Medical Disclaimer</h4>
+        <h4 className="text-sm font-medium text-blue-800">Important Note on Guidance</h4>
         <p className="text-xs text-blue-700 mt-1">
-          Soberi.ai is an informational and self-help tool only. The content and conversations provided by the service do not constitute medical advice, diagnosis, or treatment and do not create a clinician–patient relationship.
+          Soberi.ai is an informational and self-help tool for personal growth and general well-being. It is not a substitute for professional advice.
         </p>
       </div>
 
       <div className="bg-red-50 border border-red-100 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-red-800">Emergency Disclaimer</h4>
+        <h4 className="text-sm font-medium text-red-800">Emergency Situations</h4>
         <p className="text-xs text-red-700 mt-1">
-          If you believe you may harm yourself or others, or are having a medical emergency, call your local emergency number (911) immediately. Soberi.ai cannot contact emergency services on your behalf.
+          If you are in a crisis or believe you have an emergency, please contact your local emergency services immediately. Soberi.ai is not a crisis-response service.
         </p>
       </div>
 

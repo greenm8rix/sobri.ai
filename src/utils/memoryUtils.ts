@@ -1,11 +1,12 @@
-import { v4 as uuidv4 } from './mockUtils';
+import { v4 as uuidv4 } from 'uuid';
 import { MemoryEntry, MemoryType, Message, ConversationSummary } from '../types';
-import { getMemoryEntries, deleteMemoryEntry } from './storageUtils';
+import { getMemoryEntries, getInsights } from './storageUtils'; // Assuming this is the correct path
+import { getOpenAIEmbedding, getEmbeddingWithFallback, validateEmbedding } from './embeddingUtils'; // Added getEmbeddingWithFallback and validateEmbedding
 
 // Constants
 const MAX_MEMORIES_TO_RETRIEVE = 5; // Maximum number of memories to retrieve for context
 const MEMORY_RECENCY_WEIGHT = 0.4; // Weight for recency in memory scoring
-const MEMORY_IMPORTANCE_WEIGHT = 0.4; // Weight for importance in memory scoring
+const MEMORY_IMPORTANCE_WEIGHT = 0.2; // Weight for importance in memory scoring (reduced to balance with other factors)
 const MEMORY_ACCESS_WEIGHT = 0.2; // Weight for access count in memory scoring
 
 // Helper function to extract important information from user messages
@@ -14,33 +15,33 @@ export const extractImportantInformation = (message: string): string[] => {
     // Personal feelings and state
     /I (?:feel|am feeling) (.*?)(?:\.|\?|!|$)/i,
     /I'm (?:feeling) (.*?)(?:\.|\?|!|$)/i,
-    
+
     // Desires and needs
     /I (?:want|need|wish) (.*?)(?:\.|\?|!|$)/i,
     /I'm (?:trying to|attempting to) (.*?)(?:\.|\?|!|$)/i,
-    
+
     // Personal history
     /I (?:used to|would) (.*?)(?:\.|\?|!|$)/i,
     /I've (?:been|had|experienced) (.*?)(?:\.|\?|!|$)/i,
-    
+
     // Personal details and relationships
     /[Mm]y (?:family|friend|partner|spouse|boyfriend|girlfriend|wife|husband|father|mother|dad|mom|brother|sister|child|son|daughter) (.*?)(?:\.|\?|!|$)/i,
-    
+
     // Preferences
     /I (?:like|love|enjoy|prefer) (.*?)(?:\.|\?|!|$)/i,
     /I (?:hate|dislike|can't stand|don't like) (.*?)(?:\.|\?|!|$)/i,
-    
-    // Recovery-specific
-    /I (?:relapsed|slipped|used|took) (.*?)(?:\.|\?|!|$)/i,
-    /I've been (?:sober|clean|in recovery) (.*?)(?:\.|\?|!|$)/i,
-    
-    // Triggers and coping mechanisms
-    /(?:triggers|makes me want to use|makes me crave) (.*?)(?:\.|\?|!|$)/i,
+
+    // Setbacks/Challenges (more generic)
+    /I (?:had a setback|slipped|struggled with) (.*?)(?:\.|\?|!|$)/i,
+    /I've been (?:making progress on|working on) (.*?)(?:\.|\?|!|$)/i,
+
+    // Triggers and coping mechanisms (more generic)
+    /(?:challenges me|makes me want to avoid|makes me feel overwhelmed) (.*?)(?:\.|\?|!|$)/i,
     /(?:helps me|works for me|coping strategy) (.*?)(?:\.|\?|!|$)/i,
   ];
-  
+
   const insights: string[] = [];
-  
+
   // Check each pattern and extract matches
   for (const pattern of importantPatterns) {
     const matches = message.match(pattern);
@@ -48,7 +49,7 @@ export const extractImportantInformation = (message: string): string[] => {
       insights.push(matches[0]);
     }
   }
-  
+
   return insights;
 };
 
@@ -56,10 +57,11 @@ export const extractImportantInformation = (message: string): string[] => {
 export const detectMessageTopic = (message: string): string[] => {
   const topicKeywords = {
     'relapse': ['relapse', 'slip', 'used again', 'fell off', 'back to square one', 'using again', 'took', 'drank'],
-    'craving': ['craving', 'urge', 'want to use', 'tempted', 'thinking about using', 'desire', 'need'],
-    'triggers': ['trigger', 'makes me want', 'when I see', 'around people who', 'reminded', 'places', 'situations'],
+    'craving': ['craving', 'urge', 'strong desire', 'tempted', 'thinking about X', 'desire', 'need'], // Made X more generic
+    'triggers': ['trigger', 'makes me feel X', 'when I see Y', 'around Z', 'reminded of', 'places', 'situations'], // Made X,Y,Z generic
     'emotions': ['feel', 'emotion', 'sad', 'angry', 'happy', 'anxious', 'depressed', 'joy', 'shame', 'guilt'],
-    'recovery': ['sober', 'clean', 'recovery', 'journey', 'path', 'healing', 'sobriety', 'abstinence', 'program'],
+    // 'recovery': ['sober', 'clean', 'recovery', 'journey', 'path', 'healing', 'sobriety', 'abstinence', 'program'], // Removed recovery
+    'journey': ['journey', 'path', 'progress', 'healing', 'well-being', 'self-improvement'], // Added generic journey
     'relationships': ['friend', 'family', 'partner', 'spouse', 'relationship', 'people', 'support', 'social'],
     'health': ['sleep', 'eat', 'exercise', 'health', 'physical', 'doctor', 'medication', 'energy', 'fatigue'],
     'goals': ['goal', 'plan', 'future', 'aim', 'want to', 'trying to', 'hope', 'aspire', 'dream'],
@@ -67,16 +69,16 @@ export const detectMessageTopic = (message: string): string[] => {
     'celebration': ['proud', 'achievement', 'milestone', 'celebrate', 'success', 'victory', 'accomplishment'],
     'challenge': ['difficult', 'hard', 'challenge', 'struggle', 'tough', 'obstacle', 'hurdle', 'problem']
   };
-  
+
   const detectedTopics: string[] = [];
-  
+
   // Check each topic's keywords
   for (const [topic, keywords] of Object.entries(topicKeywords)) {
     if (keywords.some(keyword => message.toLowerCase().includes(keyword))) {
       detectedTopics.push(topic);
     }
   }
-  
+
   return detectedTopics;
 };
 
@@ -93,22 +95,22 @@ export const detectEmotionalState = (message: string): string => {
     'proud': ['proud', 'accomplished', 'satisfied', 'achievement', 'fulfilled'],
     'neutral': ['okay', 'fine', 'alright', 'neutral', 'so-so', 'meh', 'average']
   };
-  
+
   let dominantEmotion = 'neutral';
   let highestCount = 0;
-  
+
   // Find the emotion with the most keyword matches
   for (const [emotion, keywords] of Object.entries(emotionKeywords)) {
-    const count = keywords.filter(keyword => 
+    const count = keywords.filter(keyword =>
       message.toLowerCase().includes(keyword)
     ).length;
-    
+
     if (count > highestCount) {
       highestCount = count;
       dominantEmotion = emotion;
     }
   }
-  
+
   return dominantEmotion;
 };
 
@@ -116,25 +118,25 @@ export const detectEmotionalState = (message: string): string => {
 export const createConversationSummary = (messages: Message[]): ConversationSummary => {
   // Extract all user messages
   const userMessages = messages.filter(m => m.sender === 'user');
-  
+
   // Join user messages to analyze them together
   const combinedUserContent = userMessages.map(m => m.content).join(' ');
-  
+
   // Detect topics, emotional state, and extract insights
   const topics = detectMessageTopic(combinedUserContent);
   const emotionalState = detectEmotionalState(combinedUserContent);
   const insights = extractImportantInformation(combinedUserContent);
-  
+
   // Create a summary
   const messageCount = userMessages.length;
   const firstTimestamp = Math.min(...messages.map(m => m.timestamp));
   const lastTimestamp = Math.max(...messages.map(m => m.timestamp));
-  
+
   const summary = `Conversation with ${messageCount} user messages. 
     User emotional state: ${emotionalState}. 
     Main topics discussed: ${topics.length > 0 ? topics.join(', ') : 'general conversation'}. 
     Duration: ${Math.round((lastTimestamp - firstTimestamp) / 60000)} minutes.`;
-  
+
   return {
     id: uuidv4(),
     date: new Date().toISOString(),
@@ -153,177 +155,190 @@ export const shouldCreateSummary = (messages: Message[]): boolean => {
   if (userMessageCount > 0 && userMessageCount % 10 === 0) {
     return true;
   }
-  
+
   // Create a summary if there are emotion or topic shifts
   if (userMessageCount >= 5) {
     const recentUserMessages = messages.filter(m => m.sender === 'user').slice(-5);
-    
+
     // Check if there's a significant emotional shift
     const emotions = new Set(recentUserMessages.map(m => detectEmotionalState(m.content)));
-    
+
     // Check if there's a topic shift
     const topics = recentUserMessages.map(m => detectMessageTopic(m.content));
     const uniqueTopics = new Set(topics.flat());
-    
+
     // If there are multiple emotions or topics, it might be good to summarize
     return emotions.size > 2 || uniqueTopics.size > 3;
   }
-  
+
   return false;
 };
 
-// Get relevant memories for the current message
-export const getRelevantMemories = (
-  currentMessage: string, 
-  count: number = MAX_MEMORIES_TO_RETRIEVE
-): MemoryEntry[] => {
-  const memories = getMemoryEntries();
-  
-  // If no memories exist, return an empty array
-  if (memories.length === 0) {
-    return [];
+// Add a simple cosine similarity function
+function cosineSimilarity(a: number[], b: number[]): number {
+  // Validate inputs
+  if (!a || !b || a.length !== b.length) {
+    console.warn('Invalid inputs for cosine similarity');
+    return 0;
   }
-  
-  // Detect topics in the current message
+
+  let dot = 0, normA = 0, normB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+
+  // Prevent division by zero
+  if (normA === 0 || normB === 0) return 0;
+
+  return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+}
+
+// Get relevant memories for the current message (vector search first, fallback to topic-based)
+export const getRelevantMemories = async (
+  currentMessage: string,
+  count: number = MAX_MEMORIES_TO_RETRIEVE,
+  clientSoberiId: string, // This is the Soberi_userId from localStorage, used for DB access
+  supabaseUserId: string // Added for gated embedding calls
+): Promise<MemoryEntry[]> => {
+  const memories = getMemoryEntries(clientSoberiId); // Use clientSoberiId for DB access
+  if (memories.length === 0) return [];
+
+  // Validate and repair embeddings for all memories
+  const memoriesWithValidEmbeddings = memories.map(m => ({
+    ...m,
+    embedding: validateEmbedding(m.embedding) ? m.embedding : undefined // Use validateEmbedding directly
+  }));
+
+  // Check if we have enough valid embeddings for vector search
+  const validEmbeddingsCount = memoriesWithValidEmbeddings.filter(m => m.embedding !== undefined).length;
+  const useVectorSearch = validEmbeddingsCount >= memories.length * 0.8; // At least 80% have valid embeddings
+
+  let queryEmbedding: number[] | undefined = undefined;
+
+  if (useVectorSearch) {
+    try {
+      // Pass supabaseUserId to getEmbeddingWithFallback
+      const rawEmbedding = await getEmbeddingWithFallback(currentMessage, supabaseUserId);
+      queryEmbedding = validateEmbedding(rawEmbedding) ? rawEmbedding : undefined;
+    } catch (e) {
+      console.error('Failed to get query embedding:', e);
+      queryEmbedding = undefined;
+    }
+  }
+
+  if (useVectorSearch && queryEmbedding) {
+    // Use cosine similarity for vector search
+    const scored = memoriesWithValidEmbeddings
+      .filter(m => m.embedding !== undefined) // Only include memories with valid embeddings
+      .map(m => ({
+        memory: m,
+        score: cosineSimilarity(queryEmbedding!, m.embedding!)
+      }))
+      .filter(item => item.score > 0); // Filter out zero scores
+
+    scored.sort((a, b) => b.score - a.score);
+
+    // If we have enough results from vector search, return them
+    if (scored.length >= count) {
+      return scored.slice(0, count).map(item => {
+        // Update access count and last accessed
+        const memory = item.memory;
+        memory.lastAccessed = Date.now();
+        memory.accessCount = (memory.accessCount || 0) + 1;
+        return memory;
+      });
+    }
+  }
+
+  // Fallback: topic/emotion/recency-based scoring
   const currentTopics = detectMessageTopic(currentMessage);
   const currentEmotionalState = detectEmotionalState(currentMessage);
-  
-  // Score each memory based on relevance to current message
-  const scoredMemories = memories.map(memory => {
+  const scoredMemories = memoriesWithValidEmbeddings.map(memory => {
     let score = 0;
-    
-    // Topic relevance score (0-10)
     const memoryTopics = detectMessageTopic(memory.content);
     const topicIntersection = memoryTopics.filter(topic => currentTopics.includes(topic));
     score += (topicIntersection.length / Math.max(memoryTopics.length, 1)) * 10;
-    
-    // Emotional state match (0-5)
     const memoryEmotionalState = detectEmotionalState(memory.content);
     if (memoryEmotionalState === currentEmotionalState) {
       score += 5;
     }
-    
-    // Importance score (0-10)
     score += memory.importance;
-    
-    // Recency score (0-10)
     const ageInDays = (Date.now() - new Date(memory.date).getTime()) / (1000 * 60 * 60 * 24);
     const recencyScore = Math.max(0, 10 - Math.min(ageInDays, 10));
-    
-    // Calculate final weighted score
-    const finalScore = 
-      (score * 0.4) +  // Base relevance score (40%)
-      (recencyScore * MEMORY_RECENCY_WEIGHT) +  // Recency (weighted)
-      (memory.importance * MEMORY_IMPORTANCE_WEIGHT) +  // Importance (weighted)
-      (memory.accessCount * MEMORY_ACCESS_WEIGHT);  // Access frequency (weighted)
-    
+    const finalScore =
+      (score * 0.4) +
+      (recencyScore * MEMORY_RECENCY_WEIGHT) +
+      (memory.importance * MEMORY_IMPORTANCE_WEIGHT) +
+      (memory.accessCount * MEMORY_ACCESS_WEIGHT);
     return { memory, score: finalScore };
   });
-  
-  // Sort by score (highest first) and return the top memories
   scoredMemories.sort((a, b) => b.score - a.score);
   return scoredMemories.slice(0, count).map(item => item.memory);
 };
 
 // Generate a context prompt from relevant memories
-export const generateMemoryContextPrompt = (currentMessage: string): string => {
+export async function generateMemoryContextPrompt(
+  currentMessage: string,
+  clientSoberiId: string, // This is the Soberi_userId from localStorage, used for DB access
+  supabaseUserId: string // Added for gated embedding calls
+): Promise<string> {
   // Get relevant memories for the current message
-  const relevantMemories = getRelevantMemories(currentMessage);
-  
+  const relevantMemories = await getRelevantMemories(currentMessage, undefined, clientSoberiId, supabaseUserId); // Pass supabaseUserId
+
+  // Get the most recent AI-generated insight (from EmotionalInsight)
+  const insights = getInsights(clientSoberiId); // Use clientSoberiId for DB access
+  const recentAiInsight = insights
+    .filter(i => i.type === 'insight' && i.source === 'ai')
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+
+  // If the most recent AI insight is not already in the relevant memories, add it
+  let contextMemories = [...relevantMemories];
+  if (recentAiInsight) {
+    const alreadyIncluded = relevantMemories.some(m => m.content.includes(recentAiInsight.content));
+    if (!alreadyIncluded) {
+      // Add as a pseudo-memory entry
+      contextMemories.unshift({
+        id: `ai-insight-${recentAiInsight.id}`,
+        date: recentAiInsight.date,
+        content: recentAiInsight.content,
+        type: 'breakthrough',
+        importance: 8,
+        tags: ['insight', 'ai'],
+        accessCount: 0
+      });
+    }
+  }
+
   // If no relevant memories, return empty string
-  if (relevantMemories.length === 0) {
+  if (contextMemories.length === 0) {
     return '';
   }
-  
-  // Format memories into a context prompt
-  let contextPrompt = '--- User Context Information ---\n';
-  
-  // Group memories by type
-  const memoryGroups: Record<MemoryType, MemoryEntry[]> = {} as Record<MemoryType, MemoryEntry[]>;
-  
-  relevantMemories.forEach(memory => {
-    if (!memoryGroups[memory.type]) {
-      memoryGroups[memory.type] = [];
+
+  // Format relevant memories into a clear context string for the AI
+  let contextString = "--- User's Relevant Personal Memories ---\n";
+
+  contextMemories.forEach(memory => {
+    contextString += `Type: ${memory.type}\n`;
+    contextString += `Date: ${new Date(memory.date).toLocaleString()}\n`;
+    contextString += `Content: ${memory.content}\n`;
+    if (memory.tags && memory.tags.length > 0) {
+      contextString += `Tags: ${memory.tags.join(', ')}\n`;
     }
-    memoryGroups[memory.type].push(memory);
-    
-    // Mark this memory as accessed
-    memory.accessCount = (memory.accessCount || 0) + 1;
-    memory.lastAccessed = Date.now();
+    contextString += `---\n`; // Separator between memories
   });
-  
-  // Add personal details first
-  if (memoryGroups.personal_detail) {
-    contextPrompt += '\nPersonal Details:\n';
-    memoryGroups.personal_detail.forEach(memory => {
-      contextPrompt += `- ${memory.content}\n`;
-    });
-  }
-  
-  // Add preferences
-  if (memoryGroups.preference) {
-    contextPrompt += '\nPreferences:\n';
-    memoryGroups.preference.forEach(memory => {
-      contextPrompt += `- ${memory.content}\n`;
-    });
-  }
-  
-  // Add triggers
-  if (memoryGroups.trigger) {
-    contextPrompt += '\nTriggers:\n';
-    memoryGroups.trigger.forEach(memory => {
-      contextPrompt += `- ${memory.content}\n`;
-    });
-  }
-  
-  // Add coping strategies
-  if (memoryGroups.coping_strategy) {
-    contextPrompt += '\nEffective Coping Strategies:\n';
-    memoryGroups.coping_strategy.forEach(memory => {
-      contextPrompt += `- ${memory.content}\n`;
-    });
-  }
-  
-  // Add goals
-  if (memoryGroups.goal) {
-    contextPrompt += '\nGoals:\n';
-    memoryGroups.goal.forEach(memory => {
-      contextPrompt += `- ${memory.content}\n`;
-    });
-  }
-  
-  // Add breakthroughs
-  if (memoryGroups.breakthrough) {
-    contextPrompt += '\nBreakthroughs:\n';
-    memoryGroups.breakthrough.forEach(memory => {
-      contextPrompt += `- ${memory.content}\n`;
-    });
-  }
-  
-  // Add relapses
-  if (memoryGroups.relapse) {
-    contextPrompt += '\nRelapse Information:\n';
-    memoryGroups.relapse.forEach(memory => {
-      contextPrompt += `- ${memory.content}\n`;
-    });
-  }
-  
-  // Add conversation summaries
-  if (memoryGroups.conversation_summary) {
-    contextPrompt += '\nPrevious Conversations:\n';
-    memoryGroups.conversation_summary.forEach(memory => {
-      contextPrompt += `- ${memory.content}\n`;
-    });
-  }
-  
-  return contextPrompt;
+
+  contextString += "--------------------------------------";
+
+  return contextString;
 };
 
 // Extract memories from a conversation
 export const createMemoryFromMessage = (
-  message: Message, 
-  type: MemoryType, 
-  importance: number, 
+  message: Message,
+  type: MemoryType,
+  importance: number,
   tags: string[] = []
 ): MemoryEntry => {
   return {

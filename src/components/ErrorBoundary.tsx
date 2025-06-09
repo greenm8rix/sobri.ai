@@ -1,9 +1,8 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
-  fallback?: ReactNode;
 }
 
 interface State {
@@ -12,70 +11,58 @@ interface State {
 }
 
 class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      hasError: false,
-      error: null
-    };
+  public state: State = {
+    hasError: false,
+    error: null
+  };
+
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
   }
 
-  static getDerivedStateFromError(error: Error): State {
-    return {
-      hasError: true,
-      error
-    };
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
+    // In production, you would send this to an error tracking service
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
-    // Here you could log the error to an error reporting service
-  }
-
-  handleReset = (): void => {
-    this.setState({
-      hasError: false,
-      error: null
-    });
-    // Attempt to recover by reloading the app
+  private handleReset = () => {
+    this.setState({ hasError: false, error: null });
     window.location.reload();
   };
 
-  render(): ReactNode {
+  public render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-
       return (
-        <div className="min-h-screen flex flex-col items-center justify-center text-center p-4 bg-gray-50">
-          <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mb-6">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="h-10 w-10 text-red-500" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+          <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="w-8 h-8 text-red-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Oops! Something went wrong
+            </h1>
+            <p className="text-gray-600 mb-6">
+              We're sorry, but something unexpected happened. Don't worry, your data is safe.
+            </p>
+            <button
+              onClick={this.handleReset}
+              className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" 
-              />
-            </svg>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Reload App
+            </button>
+            {process.env.NODE_ENV === 'development' && this.state.error && (
+              <details className="mt-6 text-left">
+                <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
+                  Error details (development only)
+                </summary>
+                <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto">
+                  {this.state.error.toString()}
+                  {this.state.error.stack}
+                </pre>
+              </details>
+            )}
           </div>
-          <h2 className="text-2xl font-semibold mb-2">Something went wrong</h2>
-          <p className="text-gray-600 mb-6 max-w-md mx-auto">
-            We're sorry, but an unexpected error occurred. Our team has been notified.
-          </p>
-          <button
-            onClick={this.handleReset}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors duration-200"
-          >
-            <RefreshCw size={18} />
-            <span>Try Again</span>
-          </button>
         </div>
       );
     }

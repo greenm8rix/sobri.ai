@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Theme Colors -->
+    <color name="colorPrimary">#6366f1</color>
+    <color name="colorPrimaryDark">#4f46e5</color>
+    <color name="colorAccent">#8b5cf6</color>
+    
+    <!-- Status Bar -->
+    <color name="statusBarColor">#1f2937</color>
+    
+    <!-- Splash Screen -->
+    <color name="splashBackground">#1f2937</color>
+</resources> 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useStore } from '../../store/useStore';
+import { useAuth } from '../../auth/AuthContext';
 
 interface RelapseDialogProps {
   isOpen: boolean;
@@ -9,28 +10,35 @@ interface RelapseDialogProps {
 }
 
 const RelapseDialog: React.FC<RelapseDialogProps> = ({ isOpen, onClose }) => {
-  const { markRelapse, sendMessage } = useStore();
+  const { markSetback, sendMessage } = useStore(); // Changed markRelapse to markSetback
+  const { user } = useAuth(); // Get user from useAuth
+  const supabaseUserId = user?.id;
   const [reason, setReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
-    // Record the relapse
-    markRelapse();
+    // Record the setback
+    markSetback();
 
-    // Send a message to the AI about the relapse for support
-    if (reason.trim()) {
-      await sendMessage(`I had a relapse. ${reason.trim()}`);
+    // Send a message to the AI about the setback
+    if (supabaseUserId) {
+      if (reason.trim()) {
+        await sendMessage(`I had a setback. ${reason.trim()}`, supabaseUserId);
+      } else {
+        await sendMessage("I had a setback and could use some guidance.", supabaseUserId);
+      }
     } else {
-      await sendMessage("I had a relapse and could use some support.");
+      console.error("Cannot send setback message: Supabase User ID is missing.");
+      // Optionally, handle this case in the UI, e.g., show an error message
     }
 
     setIsSubmitting(false);
     setReason('');
     onClose();
 
-    // Navigate to chat for immediate support
+    // Navigate to chat for guidance
     useStore.getState().setActiveTab('chat');
   };
 
@@ -50,7 +58,7 @@ const RelapseDialog: React.FC<RelapseDialogProps> = ({ isOpen, onClose }) => {
             className="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden"
           >
             <div className="flex justify-between items-center border-b p-4">
-              <h3 className="text-lg font-semibold">Record a Relapse</h3>
+              <h3 className="text-lg font-semibold">Record a Setback</h3>
               <button
                 onClick={onClose}
                 className="p-1 rounded-full hover:bg-gray-100"
@@ -61,8 +69,8 @@ const RelapseDialog: React.FC<RelapseDialogProps> = ({ isOpen, onClose }) => {
 
             <div className="p-6">
               <p className="mb-4 text-gray-700">
-                Recording a relapse will reset your current streak, but it's an important part of the recovery process.
-                Soberi is here to support you through this moment.
+                Recording a setback will reset your current streak, but it's an important part of the journey.
+                Soberi.ai is here to help you through this moment.
               </p>
 
               <div className="mb-4">
@@ -100,7 +108,7 @@ const RelapseDialog: React.FC<RelapseDialogProps> = ({ isOpen, onClose }) => {
                       </svg>
                     </>
                   ) : (
-                    'Record & Get Support'
+                    'Record & Get Guidance'
                   )}
                 </button>
               </div>

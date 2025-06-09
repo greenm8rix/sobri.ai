@@ -15,7 +15,7 @@ const TasksView: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(getCurrentDateString());
   const [unshownInsights, setUnshownInsights] = useState<typeof insights>([]);
   const [currentInsightIndex, setCurrentInsightIndex] = useState(0);
-  
+
   useEffect(() => {
     // Filter insights that haven't been shown yet
     const unseenInsights = insights.filter(insight => !insight.shown);
@@ -29,7 +29,7 @@ const TasksView: React.FC = () => {
       if (a.completed !== b.completed) {
         return a.completed ? 1 : -1;
       }
-      
+
       // Then by priority
       const priorityOrder = { high: 0, medium: 1, low: 2 };
       return priorityOrder[a.priority] - priorityOrder[b.priority];
@@ -40,7 +40,7 @@ const TasksView: React.FC = () => {
     if (unshownInsights.length > 0 && currentInsightIndex < unshownInsights.length) {
       markInsightSeen(unshownInsights[currentInsightIndex].id);
     }
-    
+
     // Move to next insight if available
     if (currentInsightIndex < unshownInsights.length - 1) {
       setCurrentInsightIndex(currentInsightIndex + 1);
@@ -52,7 +52,7 @@ const TasksView: React.FC = () => {
 
   const completedTasks = filteredTasks.filter(task => task.completed);
   const pendingTasks = filteredTasks.filter(task => !task.completed);
-  
+
   return (
     <div className="max-w-3xl mx-auto">
       {/* Emotional Insight Card */}
@@ -64,9 +64,9 @@ const TasksView: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             className="mb-6"
           >
-            <InsightCard 
-              insight={unshownInsights[currentInsightIndex]} 
-              onDismiss={handleNextInsight} 
+            <InsightCard
+              insight={unshownInsights[currentInsightIndex]}
+              onDismiss={handleNextInsight}
               total={unshownInsights.length}
               current={currentInsightIndex + 1}
             />
@@ -77,16 +77,15 @@ const TasksView: React.FC = () => {
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold">Daily Structure</h2>
-          <p className="text-gray-600 text-sm">Having a structured day helps build recovery momentum</p>
+          <p className="text-gray-600 text-sm">Having a structured day helps build momentum</p>
         </div>
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setSelectedDate(getCurrentDateString())}
-            className={`px-3 py-1.5 text-sm rounded-lg transition-colors duration-200 ${
-              selectedDate === getCurrentDateString()
+            className={`px-3 py-1.5 text-sm rounded-lg transition-colors duration-200 ${selectedDate === getCurrentDateString()
                 ? 'bg-indigo-100 text-indigo-700 font-medium'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+              }`}
           >
             Today
           </button>
@@ -99,7 +98,7 @@ const TasksView: React.FC = () => {
           </button>
         </div>
       </div>
-      
+
       <AnimatePresence>
         {showNewTaskForm && (
           <motion.div
@@ -112,7 +111,7 @@ const TasksView: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {filteredTasks.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-200">
           <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
@@ -139,7 +138,7 @@ const TasksView: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {completedTasks.length > 0 && (
             <div>
               <h3 className="text-lg font-medium mb-3">Completed Tasks</h3>
@@ -152,12 +151,12 @@ const TasksView: React.FC = () => {
           )}
         </div>
       )}
-      
+
       {/* Daily Inspiration */}
       <div className="mt-8 p-5 bg-indigo-50 rounded-lg border border-indigo-100">
-        <h3 className="font-medium text-indigo-900 mb-2">Recovery Perspective</h3>
+        <h3 className="font-medium text-indigo-900 mb-2">Daily Perspective</h3>
         <p className="text-indigo-700 text-sm italic">
-          "Recovery isn't about reaching a destination of constant happiness. It's about building the capacity to experience the full range of human emotions without being overwhelmed by them or needing to escape them."
+          "Life isn't about reaching a destination of constant happiness. It's about building the capacity to experience the full range of human emotions without being overwhelmed by them or needing to escape them."
         </p>
       </div>
     </div>

@@ -1,14 +1,14 @@
-# Soberi.ai - Recovery Companion (TWA)
+# Soberi.ai (TWA)
 
-Soberi.ai is a supportive AI companion designed for addiction recovery and mental wellbeing. The application provides users with a non-judgmental space to chat, track their progress, journal their thoughts, and maintain their recovery journey.
+Soberi.ai is a supportive AI companion designed to help users navigate daily life. The application provides users with a non-judgmental space to chat, track their progress, and journal their thoughts.
 
 ## Features
 
 - **Chat Interface**: Communicate with Soberi, your supportive AI companion
-- **Daily Check-ins**: Track your mood and cravings
-- **Task Management**: Structured daily activities to support recovery
+- **Daily Check-ins**: Track your daily progress and mood
+- **Task Management**: Structured daily activities
 - **Journaling**: Record your thoughts and reflections
-- **Progress Tracking**: Monitor your recovery streaks and milestones
+- **Progress Tracking**: Monitor your streaks and milestones
 - **Progressive Web App**: Install on your device for an app-like experience
 - **Trusted Web App (TWA)**: Available as a native Android app
 
@@ -54,20 +54,7 @@ This will generate optimized production files in the `dist` directory.
 
 To generate the Android TWA app:
 
-1. Install Bubblewrap:
-   ```
-   npm install -g @bubblewrap/cli
-   ```
-
-2. Initialize the TWA project:
-   ```
-   bubblewrap init --manifest https://your-deployed-url.com/manifest.json
-   ```
-
-3. Build the Android App Bundle:
-   ```
-   bubblewrap build
-   ```
+Read the Mobile readme.md file
 
 ## Deployment
 
@@ -87,9 +74,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed and cannot be redistributed without permission.
 
 ## Acknowledgments
 
-- The recovery community for inspiration
-- All contributors and supporters of mental health and addiction recovery resources
+- The open-source community for their invaluable tools and libraries.
+- All contributors who help make this project better.

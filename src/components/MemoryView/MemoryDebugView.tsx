@@ -75,7 +75,7 @@ const MemoryDebugView: React.FC = () => {
         return 'bg-teal-100 text-teal-800';
       case 'goal':
         return 'bg-amber-100 text-amber-800';
-      case 'relapse':
+      case 'setback': // Changed from 'relapse'
         return 'bg-orange-100 text-orange-800';
       case 'conversation_summary':
         return 'bg-indigo-100 text-indigo-800';
@@ -91,7 +91,7 @@ const MemoryDebugView: React.FC = () => {
     'trigger',
     'coping_strategy',
     'goal',
-    'relapse',
+    'setback', // Changed from 'relapse'
     'conversation_summary'
   ];
 
@@ -224,7 +224,7 @@ const MemoryDebugView: React.FC = () => {
                   type="text"
                   value={newMemory.tags}
                   onChange={(e) => setNewMemory({ ...newMemory, tags: e.target.value })}
-                  placeholder="mood, recovery, trigger, etc."
+                  placeholder="mood, challenge, trigger, etc."
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                 />
               </div>
@@ -240,8 +240,8 @@ const MemoryDebugView: React.FC = () => {
                   onClick={handleCreateMemory}
                   disabled={!newMemory.content.trim()}
                   className={`px-4 py-2 rounded-lg transition-colors duration-200 ${!newMemory.content.trim()
-                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                      : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                     }`}
                 >
                   Save Memory

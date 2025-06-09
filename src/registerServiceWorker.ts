@@ -5,9 +5,9 @@ export function registerServiceWorker() {
         const registration = await navigator.serviceWorker.register('/service-worker.js', {
           scope: '/'
         });
-        
+
         console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        
+
         // Check for updates
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
@@ -20,15 +20,15 @@ export function registerServiceWorker() {
             });
           }
         });
-        
+
         // Register for push notifications
         requestNotificationPermission();
-        
+
       } catch (error) {
         console.error('ServiceWorker registration failed: ', error);
       }
     });
-    
+
     // Handle service worker communication
     navigator.serviceWorker.addEventListener('message', (event) => {
       console.log('Message from service worker: ', event.data);
@@ -37,20 +37,34 @@ export function registerServiceWorker() {
         // Handle cache updates
       }
     });
-    
+
     // Add offline detection
     window.addEventListener('online', () => {
       console.log('Application is online. Syncing data...');
       // Trigger background sync
       if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.ready.then(registration => {
-          registration.sync.register('sync-checkins');
-          registration.sync.register('sync-journal');
-          registration.sync.register('sync-tasks');
+          // Check if Background Sync is supported by the browser and registration object
+          if ('sync' in registration) {
+            // Cast registration to any or a type that includes BackgroundSyncManager if needed,
+            // or ensure your tsconfig.json lib includes 'WebWorker' and potentially 'DOM.BackgroundSync'
+            // For a quick fix, we can cast to any to bypass strict type checking here if 'sync' is known to exist at runtime.
+            const regWithSync = registration as any; 
+            try {
+              regWithSync.sync.register('sync-checkins');
+              regWithSync.sync.register('sync-journal');
+              regWithSync.sync.register('sync-tasks');
+              console.log('Background sync registered for checkins, journal, and tasks.');
+            } catch (syncError) {
+              console.error('Failed to register background sync:', syncError);
+            }
+          } else {
+            console.warn('Background Sync not supported by this browser or service worker registration.');
+          }
         });
       }
     });
-    
+
     window.addEventListener('offline', () => {
       console.log('Application is offline. Data will be synced when connection returns.');
       // Show offline notification to user
@@ -65,14 +79,11 @@ function showUpdateNotification() {
   const notification = document.createElement('div');
   notification.className = 'update-notification';
   notification.innerHTML = `
-    <div class="p-4 bg-indigo-600 text-white fixed bottom-0 left-0 right-0 flex justify-between items-center z-50">
-      <p>New version available! Refresh to update.</p>
-      <button id="update-app" class="bg-white text-indigo-600 px-4 py-1 rounded">Update</button>
-    </div>
+  
   `;
-  
+
   document.body.appendChild(notification);
-  
+
   document.getElementById('update-app')?.addEventListener('click', () => {
     window.location.reload();
   });
@@ -87,11 +98,11 @@ function showOfflineNotification() {
       <p>You're offline. Some features may be limited.</p>
     </div>
   `;
-  
+
   const existingNotification = document.querySelector('.offline-notification');
   if (!existingNotification) {
     document.body.appendChild(notification);
-    
+
     // Remove after 5 seconds
     setTimeout(() => {
       notification.remove();
@@ -102,7 +113,7 @@ function showOfflineNotification() {
 async function requestNotificationPermission() {
   if ('Notification' in window) {
     const permission = await Notification.requestPermission();
-    
+
     if (permission === 'granted') {
       // Subscribe to push notifications
       subscribeToPushNotifications();
@@ -113,7 +124,7 @@ async function requestNotificationPermission() {
 async function subscribeToPushNotifications() {
   try {
     const registration = await navigator.serviceWorker.ready;
-    
+
     // In a real app, you would request a subscription from your server
     // and use the server's public key
     // This is just a placeholder example
@@ -132,7 +143,7 @@ async function subscribeToPushNotifications() {
       body: JSON.stringify(subscription),
     });
     */
-    
+
     console.log('Ready for push notifications');
   } catch (error) {
     console.error('Error subscribing to push notifications:', error);
@@ -153,6 +164,6 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
   for (let i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }
-  
+
   return outputArray;
 }

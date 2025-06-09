@@ -10,15 +10,15 @@ interface MilestoneTimelineProps {
 
 const MilestoneTimeline: React.FC<MilestoneTimelineProps> = ({ milestones }) => {
   // Sort milestones by date (newest first)
-  const sortedMilestones = [...milestones].sort((a, b) => 
+  const sortedMilestones = [...milestones].sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
   );
-  
+
   const getIcon = (type: string) => {
     switch (type) {
       case 'streak':
         return <Award className="text-indigo-500" />;
-      case 'relapse':
+      case 'setback':
         return <AlertTriangle className="text-orange-500" />;
       case 'achievement':
         return <Trophy className="text-yellow-500" />;
@@ -26,12 +26,12 @@ const MilestoneTimeline: React.FC<MilestoneTimelineProps> = ({ milestones }) => 
         return <Award className="text-indigo-500" />;
     }
   };
-  
+
   const getColorClass = (type: string) => {
     switch (type) {
       case 'streak':
         return 'bg-indigo-50 border-indigo-100';
-      case 'relapse':
+      case 'setback':
         return 'bg-orange-50 border-orange-100';
       case 'achievement':
         return 'bg-yellow-50 border-yellow-100';
@@ -42,11 +42,11 @@ const MilestoneTimeline: React.FC<MilestoneTimelineProps> = ({ milestones }) => 
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <h3 className="text-xl font-semibold mb-2">Your Recovery Journey</h3>
+      <h3 className="text-xl font-semibold mb-2">Your Journey</h3>
       <p className="text-gray-600 mb-6">
         Every step matters - celebrate your progress and learn from setbacks.
       </p>
-      
+
       {sortedMilestones.length === 0 ? (
         <div className="text-center py-12">
           <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
@@ -61,7 +61,7 @@ const MilestoneTimeline: React.FC<MilestoneTimelineProps> = ({ milestones }) => 
         <div className="relative">
           {/* Timeline line */}
           <div className="absolute top-0 bottom-0 left-6 w-0.5 bg-gray-200 z-0"></div>
-          
+
           <div className="space-y-8 relative z-10">
             {sortedMilestones.map((milestone, index) => (
               <motion.div
@@ -74,27 +74,27 @@ const MilestoneTimeline: React.FC<MilestoneTimelineProps> = ({ milestones }) => 
                 <div className="w-12 h-12 rounded-full border-2 border-white bg-white shadow-sm flex items-center justify-center flex-shrink-0">
                   {getIcon(milestone.type)}
                 </div>
-                
+
                 <div className={`flex-1 p-4 rounded-lg border ${getColorClass(milestone.type)}`}>
                   <div className="flex justify-between items-start">
                     <h4 className="font-medium">
                       {milestone.type === 'streak' && `${milestone.value} Day Streak`}
-                      {milestone.type === 'relapse' && `Relapse Recovery`}
+                      {milestone.type === 'setback' && `Setback`}
                       {milestone.type === 'achievement' && `Achievement Unlocked`}
                     </h4>
                     <span className="text-xs text-gray-500">{formatDate(milestone.date)}</span>
                   </div>
                   <p className="text-sm text-gray-600 mt-1">{milestone.description}</p>
-                  
-                  {milestone.type === 'relapse' && (
+
+                  {milestone.type === 'setback' && (
                     <p className="text-xs text-orange-700 mt-2">
-                      Remember, recovery isn't linear. Each relapse is an opportunity to learn and grow stronger.
+                      Remember, progress isn't linear. Each setback is an opportunity to learn and grow stronger.
                     </p>
                   )}
-                  
+
                   {milestone.type === 'streak' && milestone.value >= 30 && (
                     <div className="mt-2 text-xs text-indigo-600 bg-indigo-50 p-2 rounded">
-                      <span className="font-medium">Amazing work!</span> You've reached a significant milestone in your recovery journey.
+                      <span className="font-medium">Amazing work!</span> You've reached a significant milestone in your journey.
                     </div>
                   )}
                 </div>

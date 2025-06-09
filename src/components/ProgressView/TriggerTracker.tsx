@@ -12,25 +12,31 @@ const TriggerTracker: React.FC = () => {
   const [strategy, setStrategy] = useState('');
   const [successful, setSuccessful] = useState<boolean>(true);
   const [notes, setNotes] = useState('');
-  
+
   const commonTriggers = [
-    'Stress', 'Negative emotions', 'Social pressure', 'Being around users',
-    'Certain locations', 'Celebrations', 'Boredom', 'Arguments'
+    'Stress', 'Negative emotions', 'Social situations', // Changed 'Being around users' and 'Social pressure'
+    'Certain locations', 'Specific events', // Changed 'Celebrations'
+    'Boredom', 'Arguments', 'Fatigue'
   ];
-  
+
   const commonStrategies = [
-    'Called support person', 'Used urge surfing', 'Distraction technique',
-    'Physical exercise', 'Mindfulness meditation', 'Left the situation',
-    'Delayed decision (waited it out)', 'Used HALT check'
+    'Talked to someone trusted',
+    'Mindful acceptance of feelings', // Changed from 'Used urge surfing'
+    'Distraction technique',
+    'Physical exercise',
+    'Mindfulness meditation',
+    'Left the situation',
+    'Delayed decision (waited it out)',
+    'Self-care check (needs, feelings)' // Changed from 'Used HALT check'
   ];
-  
+
   const handleSubmit = () => {
     if (trigger && strategy) {
       addTriggerLog(trigger, intensity, strategy, successful, notes);
       resetForm();
     }
   };
-  
+
   const resetForm = () => {
     setTrigger('');
     setIntensity(5);
@@ -39,11 +45,11 @@ const TriggerTracker: React.FC = () => {
     setNotes('');
     setShowAddForm(false);
   };
-  
-  const sortedTriggers = [...triggerLogs].sort((a, b) => 
+
+  const sortedTriggers = [...triggerLogs].sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
   );
-  
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex justify-between items-center mb-6">
@@ -59,7 +65,7 @@ const TriggerTracker: React.FC = () => {
           <span className="text-sm">Add New</span>
         </button>
       </div>
-      
+
       <AnimatePresence>
         {showAddForm && (
           <motion.div
@@ -70,14 +76,14 @@ const TriggerTracker: React.FC = () => {
           >
             <div className="flex justify-between items-center mb-4">
               <h4 className="font-medium">Record a Trigger</h4>
-              <button 
+              <button
                 onClick={resetForm}
                 className="text-gray-400 hover:text-gray-600"
               >
                 <X size={18} />
               </button>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -87,7 +93,7 @@ const TriggerTracker: React.FC = () => {
                   type="text"
                   value={trigger}
                   onChange={(e) => setTrigger(e.target.value)}
-                  placeholder="Describe what triggered your craving"
+                  placeholder="Describe what triggered the strong feeling/urge"
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 />
                 <div className="flex flex-wrap gap-1 mt-2">
@@ -103,7 +109,7 @@ const TriggerTracker: React.FC = () => {
                   ))}
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Intensity (1-10)
@@ -125,7 +131,7 @@ const TriggerTracker: React.FC = () => {
                   <span>Severe</span>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Strategy Used
@@ -150,7 +156,7 @@ const TriggerTracker: React.FC = () => {
                   ))}
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Was it successful?
@@ -159,28 +165,26 @@ const TriggerTracker: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSuccessful(true)}
-                    className={`px-3 py-1 rounded-lg text-sm ${
-                      successful 
-                        ? 'bg-green-100 text-green-700 border border-green-200' 
-                        : 'bg-gray-100 text-gray-700 border border-gray-200'
-                    }`}
+                    className={`px-3 py-1 rounded-lg text-sm ${successful
+                      ? 'bg-green-100 text-green-700 border border-green-200'
+                      : 'bg-gray-100 text-gray-700 border border-gray-200'
+                      }`}
                   >
                     Yes
                   </button>
                   <button
                     type="button"
                     onClick={() => setSuccessful(false)}
-                    className={`px-3 py-1 rounded-lg text-sm ${
-                      !successful 
-                        ? 'bg-red-100 text-red-700 border border-red-200' 
-                        : 'bg-gray-100 text-gray-700 border border-gray-200'
-                    }`}
+                    className={`px-3 py-1 rounded-lg text-sm ${!successful
+                      ? 'bg-red-100 text-red-700 border border-red-200'
+                      : 'bg-gray-100 text-gray-700 border border-gray-200'
+                      }`}
                   >
                     No
                   </button>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Notes (optional)
@@ -193,7 +197,7 @@ const TriggerTracker: React.FC = () => {
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 />
               </div>
-              
+
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
@@ -206,11 +210,10 @@ const TriggerTracker: React.FC = () => {
                   type="button"
                   onClick={handleSubmit}
                   disabled={!trigger || !strategy}
-                  className={`px-3 py-1.5 rounded-lg text-sm ${
-                    !trigger || !strategy
-                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                      : 'bg-indigo-600 text-white hover:bg-indigo-700'
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg text-sm ${!trigger || !strategy
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                    }`}
                 >
                   Save Trigger
                 </button>
@@ -219,7 +222,7 @@ const TriggerTracker: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {sortedTriggers.length === 0 ? (
         <div className="text-center py-8">
           <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
@@ -227,7 +230,7 @@ const TriggerTracker: React.FC = () => {
           </div>
           <h4 className="text-gray-700 font-medium mb-1">No triggers logged yet</h4>
           <p className="text-sm text-gray-500 mb-3">
-            Track what triggers your cravings and which strategies help
+            Track what triggers strong feelings/urges and which strategies help
           </p>
           <button
             onClick={() => setShowAddForm(true)}
@@ -243,11 +246,10 @@ const TriggerTracker: React.FC = () => {
               key={log.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className={`p-3 rounded-lg border ${
-                log.successful
-                  ? 'border-green-100 bg-green-50'
-                  : 'border-red-100 bg-red-50'
-              }`}
+              className={`p-3 rounded-lg border ${log.successful
+                ? 'border-green-100 bg-green-50'
+                : 'border-red-100 bg-red-50'
+                }`}
             >
               <div className="flex justify-between">
                 <h5 className="font-medium text-sm">{log.trigger}</h5>
@@ -263,11 +265,11 @@ const TriggerTracker: React.FC = () => {
               </div>
               <div className="mt-1 text-xs text-gray-600 flex items-center">
                 <div className="mr-3">
-                  Intensity: 
+                  Intensity:
                   <span className="font-medium ml-1">{log.intensity}/10</span>
                 </div>
                 <div>
-                  Strategy: 
+                  Strategy:
                   <span className="font-medium ml-1">{log.strategy}</span>
                 </div>
               </div>

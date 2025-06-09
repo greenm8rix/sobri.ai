@@ -1,19 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { DivideIcon as LucideIcon } from 'lucide-react';
+import { ElementType } from 'react'; // Import ElementType
 
 interface NavItemProps {
-  icon: LucideIcon;
+  icon: ElementType; // Use ElementType for the icon prop
   label: string;
   isActive: boolean;
   onClick: () => void;
   vertical?: boolean;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ 
-  icon: Icon, 
-  label, 
-  isActive, 
+const NavItem: React.FC<NavItemProps> = ({
+  icon: Icon,
+  label,
+  isActive,
   onClick,
   vertical = false
 }) => {
@@ -24,14 +24,14 @@ const NavItem: React.FC<NavItemProps> = ({
       onClick={onClick}
       className={`
         relative w-full flex ${vertical ? 'flex-row items-center' : 'flex-col items-center justify-center'} 
-        ${isActive 
-          ? vertical 
-            ? 'text-indigo-600 bg-indigo-50 font-medium' 
-            : 'text-indigo-600 font-medium' 
+        ${isActive
+          ? vertical
+            ? 'text-indigo-600 bg-indigo-50 font-medium'
+            : 'text-indigo-600 font-medium'
           : 'text-gray-500 hover:text-gray-700'
         }
         ${vertical ? 'p-3 rounded-lg' : 'py-2'}
-        transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+        transition-colors duration-200 focus:outline-none
       `}
       aria-label={label}
       aria-pressed={isActive}
@@ -40,7 +40,7 @@ const NavItem: React.FC<NavItemProps> = ({
     >
       <Icon size={vertical ? 20 : 24} className={vertical ? 'mr-3' : 'mb-1'} aria-hidden="true" />
       <span className={vertical ? 'text-sm' : 'text-xs'}>{label}</span>
-      
+
       {isActive && !vertical && (
         <motion.div
           className="absolute bottom-0 left-1/2 w-1.5 h-1.5 bg-indigo-600 rounded-full transform -translate-x-1/2 mb-0.5"

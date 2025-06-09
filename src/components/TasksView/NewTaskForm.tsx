@@ -10,19 +10,19 @@ interface NewTaskFormProps {
   selectedDate?: string;
 }
 
-const NewTaskForm: React.FC<NewTaskFormProps> = ({ 
+const NewTaskForm: React.FC<NewTaskFormProps> = ({
   onClose,
   selectedDate = getCurrentDateString()
 }) => {
   const { addTask } = useStore();
-  
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<TaskPriority>('medium');
   const [category, setCategory] = useState<TaskCategory>('self-care');
   const [timeEstimate, setTimeEstimate] = useState<number | undefined>(undefined);
   const [date, setDate] = useState(selectedDate);
-  
+
   const handleSubmit = () => {
     if (title.trim()) {
       addTask(
@@ -36,33 +36,32 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
       onClose();
     }
   };
-  
+
   const categoryOptions: { value: TaskCategory; label: string; emoji: string }[] = [
     { value: 'self-care', label: 'Self-care', emoji: '🧘' },
     { value: 'physical', label: 'Physical', emoji: '🏃' },
     { value: 'social', label: 'Social', emoji: '👥' },
-    { value: 'productive', label: 'Productive', emoji: '📝' },
-    { value: 'recovery', label: 'Recovery', emoji: '❤️' }
+    { value: 'productive', label: 'Productive', emoji: '📝' }
   ];
-  
+
   const priorityOptions: { value: TaskPriority; label: string; color: string }[] = [
     { value: 'high', label: 'High', color: 'bg-red-100 text-red-800 border-red-200' },
     { value: 'medium', label: 'Medium', color: 'bg-amber-100 text-amber-800 border-amber-200' },
     { value: 'low', label: 'Low', color: 'bg-blue-100 text-blue-800 border-blue-200' }
   ];
-  
+
   return (
     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-medium text-lg">Add New Task</h3>
-        <button 
+        <button
           onClick={onClose}
           className="p-1 hover:bg-gray-100 rounded-full"
         >
           <X size={18} className="text-gray-500" />
         </button>
       </div>
-      
+
       <div className="space-y-4">
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
@@ -77,7 +76,7 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           />
         </div>
-        
+
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
             Description (optional)
@@ -91,7 +90,7 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           />
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -104,8 +103,8 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
                   type="button"
                   onClick={() => setCategory(option.value)}
                   className={`px-3 py-2 text-center text-sm rounded-lg border transition-colors duration-200 flex items-center justify-center
-                    ${category === option.value 
-                      ? 'border-indigo-300 bg-indigo-50 text-indigo-800' 
+                    ${category === option.value
+                      ? 'border-indigo-300 bg-indigo-50 text-indigo-800'
                       : 'border-gray-200 hover:border-gray-300'
                     }`}
                 >
@@ -115,7 +114,7 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
               ))}
             </div>
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Priority
@@ -127,7 +126,7 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
                   type="button"
                   onClick={() => setPriority(option.value)}
                   className={`px-3 py-2 text-center text-sm rounded-lg border transition-colors duration-200
-                    ${priority === option.value 
+                    ${priority === option.value
                       ? option.color
                       : 'border-gray-200 hover:border-gray-300'
                     }`}
@@ -138,7 +137,7 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label htmlFor="timeEstimate" className="block text-sm font-medium text-gray-700 mb-1">
@@ -154,7 +153,7 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
-          
+
           <div>
             <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
               Date
@@ -173,7 +172,7 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="flex justify-end space-x-3 mt-2">
           <button
             type="button"
@@ -186,11 +185,10 @@ const NewTaskForm: React.FC<NewTaskFormProps> = ({
             type="button"
             onClick={handleSubmit}
             disabled={!title.trim()}
-            className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
-              !title.trim()
+            className={`px-4 py-2 rounded-lg transition-colors duration-200 ${!title.trim()
                 ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 : 'bg-indigo-600 hover:bg-indigo-700 text-white'
-            }`}
+              }`}
           >
             Save Task
           </button>

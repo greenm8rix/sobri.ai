@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../UI/Tabs';
 import EmergencyResources from '../Resources/EmergencyResources';
 import RecoveryResources from '../Resources/RecoveryResources';
-import CopingSkills from './CopingSkills';
+import CopingSkills from '../ResourcesView/CopingSkills'; // Corrected path
 import LegalTermsView from '../Legal/LegalTermsView';
 
 const ResourcesView: React.FC = () => {
@@ -45,9 +45,9 @@ const ResourcesView: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold mb-2">Recovery Resources</h1>
+        <h1 className="text-2xl font-semibold mb-2">Helpful Resources</h1>
         <p className="text-gray-600">
-          Access helplines, support groups, and coping strategies to strengthen your recovery journey.
+          Access support information and coping strategies to strengthen your personal journey.
         </p>
       </div>
 

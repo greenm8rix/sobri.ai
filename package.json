@@ -1,5 +1,5 @@
 {
-  "name": "Soberiai-recovery-companion",
+  "name": "Soberi.ai",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -11,17 +11,31 @@
     "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
+    "@capacitor/android": "^7.2.0",
+    "@capacitor/app": "^7.0.1",
+    "@capacitor/cli": "^7.2.0",
+    "@capacitor/core": "^7.2.0",
+    "@capacitor/ios": "^7.2.0",
+    "@capacitor/splash-screen": "^7.0.1",
+    "@capacitor/status-bar": "^7.0.1",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
+    "@supabase/supabase-js": "^2.39.7",
+    "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.4",
+    "idb": "^8.0.3",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "uuid": "^11.1.0",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "@types/uuid": "^10.0.0",
     "@vite-pwa/assets-generator": "^0.2.3",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.18",

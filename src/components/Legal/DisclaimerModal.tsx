@@ -29,7 +29,7 @@ const DisclaimerModal: React.FC<DisclaimerModalProps> = ({ isOpen, onClose }) =>
 
             <div className="p-4 overflow-y-auto max-h-[calc(80vh-120px)]">
               <p className="text-gray-600 mb-4">
-                Soberi.ai is a supportive companion for your recovery journey. Please note:
+                Soberi.ai is a supportive companion for your daily life. Please note:
               </p>
 
               <LegalDisclaimer type="full" onClose={onClose} />

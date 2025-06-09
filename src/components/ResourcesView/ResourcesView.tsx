@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../UI/Tabs';
 import EmergencyResources from '../Resources/EmergencyResources';
-import RecoveryResources from '../Resources/RecoveryResources';
+import RecoveryResources from '../Resources/RecoveryResources'; // Will now be a placeholder
 import CopingSkills from './CopingSkills';
 import LegalTermsView from '../Legal/LegalTermsView';
 import MemoryDebugView from '../MemoryView/MemoryDebugView';
 import MemoryContextDemo from '../MemoryView/MemoryContextDemo';
+// Removed duplicate useEffect import
 
 const ResourcesView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('emergency');
+  const [activeTab, setActiveTab] = useState('coping');
   const [legalView, setLegalView] = useState<'terms' | 'privacy' | 'ai' | null>(null);
   const [showMemoryDebug, setShowMemoryDebug] = useState(false);
 
@@ -86,27 +87,17 @@ const ResourcesView: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold mb-2">Recovery Resources</h1>
+        <h1 className="text-2xl font-semibold mb-2">Helpful Resources</h1>
         <p className="text-gray-600">
-          Access helplines, support groups, and coping strategies to strengthen your recovery journey.
+          Access tools and information for your daily life.
         </p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">
-          <TabsTrigger value="emergency">Emergency Help</TabsTrigger>
-          <TabsTrigger value="resources">Support Groups</TabsTrigger>
           <TabsTrigger value="coping">Coping Skills</TabsTrigger>
           <TabsTrigger value="legal">Legal</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="emergency">
-          <EmergencyResources />
-        </TabsContent>
-
-        <TabsContent value="resources">
-          <RecoveryResources />
-        </TabsContent>
 
         <TabsContent value="coping">
           <CopingSkills />

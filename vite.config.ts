@@ -9,7 +9,35 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
-      manifest: false, // We'll use our custom manifest.json
+      manifest: {
+        name: 'Soberi.ai',
+        short_name: 'Soberi',
+        description: 'Your supportive AI companion.',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#f9fafb',
+        theme_color: '#4f46e5',
+        icons: [
+          {
+            src: 'android/android-launchericon-192-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'android/android-launchericon-512-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'maskable/maskable-icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ]
+      },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff,woff2}'],
         runtimeCaching: [
@@ -64,7 +92,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: [
-            'react', 
+            'react',
             'react-dom',
             'framer-motion',
             'zustand'

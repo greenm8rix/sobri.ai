@@ -6,14 +6,14 @@ interface QuickResponsesProps {
 }
 
 const QuickResponses: React.FC<QuickResponsesProps> = ({ onSelect }) => {
-  // Generate contextual suggestions based on recovery themes
+  // Generate contextual suggestions based on helpful themes
   const suggestions = [
-    "I'm struggling with cravings today",
-    "I feel like I might relapse",
-    "What coping strategies can help me?",
-    "I'm feeling really good today",
-    "How do I handle triggers?",
-    "I slipped up yesterday"
+    "I'm feeling a bit down today.",
+    "Can we talk about managing stress?",
+    "I had a good day today!",
+    "What are some healthy coping skills?",
+    "I'm facing a challenge.",
+    "I need some encouragement."
   ];
 
   return (

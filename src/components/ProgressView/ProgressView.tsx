@@ -13,7 +13,7 @@ const ProgressView: React.FC = () => {
   const { userProgress, checkIns } = useStore();
   const [showRelapseDialog, setShowRelapseDialog] = useState(false);
   const [activeTab, setActiveTab] = useState('progress');
-  
+
   const hasStarted = userProgress.startDate !== null;
 
   if (!hasStarted) {
@@ -30,7 +30,7 @@ const ProgressView: React.FC = () => {
           </div>
           <h2 className="text-xl font-semibold mb-3">Start Your Journey</h2>
           <p className="text-gray-600 mb-6">
-            Begin tracking your recovery progress by completing your first daily check-in.
+            Begin tracking your progress by completing your first daily check-in.
           </p>
           <button
             onClick={() => {
@@ -48,7 +48,7 @@ const ProgressView: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <ProgressCard 
+        <ProgressCard
           title="Current Streak"
           value={userProgress.currentStreak}
           unit="days"
@@ -57,8 +57,8 @@ const ProgressView: React.FC = () => {
           accentColor="text-indigo-600"
           animate={true}
         />
-        
-        <ProgressCard 
+
+        <ProgressCard
           title="Longest Streak"
           value={userProgress.longestStreak}
           unit="days"
@@ -66,8 +66,8 @@ const ProgressView: React.FC = () => {
           color="bg-emerald-50"
           accentColor="text-emerald-600"
         />
-        
-        <ProgressCard 
+
+        <ProgressCard
           title="Total Clean Days"
           value={userProgress.totalDaysClean}
           unit="days"
@@ -76,37 +76,37 @@ const ProgressView: React.FC = () => {
           accentColor="text-blue-600"
         />
       </div>
-      
+
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">
           <TabsTrigger value="progress">Calendar</TabsTrigger>
           <TabsTrigger value="triggers">Trigger Tracker</TabsTrigger>
           <TabsTrigger value="milestones">Milestones</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="progress">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-medium mb-4">Your Progress Calendar</h3>
               <StreakCalendar checkIns={checkIns} />
             </div>
-            
+
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col">
-              <h3 className="text-lg font-medium mb-4">Recovery Tools</h3>
-              
+              <h3 className="text-lg font-medium mb-4">Tools</h3>
+
               <p className="text-gray-600 text-sm mb-6">
-                These tools help you manage your recovery journey effectively.
+                These tools help you manage your journey effectively.
               </p>
-              
+
               <div className="space-y-4 mt-auto">
                 <button
                   onClick={() => setShowRelapseDialog(true)}
                   className="w-full py-3 px-4 flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors duration-200"
                 >
                   <AlertTriangle size={18} className="text-orange-500" />
-                  <span>Record a Relapse</span>
+                  <span>Record a Setback</span>
                 </button>
-                
+
                 <button
                   onClick={() => {
                     useStore.getState().resetProgress();
@@ -120,19 +120,19 @@ const ProgressView: React.FC = () => {
             </div>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="triggers">
           <TriggerTracker />
         </TabsContent>
-        
+
         <TabsContent value="milestones">
           <MilestoneTimeline milestones={userProgress.milestones || []} />
         </TabsContent>
       </Tabs>
-      
-      <RelapseDialog 
-        isOpen={showRelapseDialog} 
-        onClose={() => setShowRelapseDialog(false)} 
+
+      <RelapseDialog
+        isOpen={showRelapseDialog}
+        onClose={() => setShowRelapseDialog(false)}
       />
     </div>
   );
